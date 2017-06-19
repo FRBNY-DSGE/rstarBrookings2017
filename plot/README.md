@@ -1,0 +1,36 @@
+# Safety, Liquidity, and the Natural Rate of Interest
+Marco Del Negro, Domenico Giannone, Marc Giannoni, Andrea Tambalotti
+(c) 2017 Federal Reserve Bank of New York
+
+The files in this directory replicate all figures in the paper. Run
+the script `makeRstarPlots.m` to generate plots, which will be saved
+in the `Figures` subdirectory. Please note that the names of PDFs may
+not all correspond to the order of plots in the paper; see below for a
+corrected labeling.
+
+## Notes
+
+These plots were generated using MATLAB version 16a.
+
+## Directory Structure
+
+- `makeRstarPlots.m`: Main driver script
+- `helperFunctions/`: MATLAB functions called by `makeRstarPlots`
+- `Figures/`: Output figure directory
+- `Tables/`: Input table directory
+
+## PDF names -> figure name in paper
+
+- Figures 1-9 are properly named: the PDF name corresponds exactly to
+  the name of the plot in the paper.
+- Figure 10 (Forward Natural Rates in the DSGE vs rbar in the VAR)
+  corresponds to `Figures/Figure11a.pdf` and `Figures/Figure11b.pdf`
+- Figure 11 (Forward Natural Rates and Forward Actual Rates)
+  corresponds to `Figures/Figure12a.pdf` and `Figures/Figure12b.pdf`
+- Figure 12 (Comparison between 5-Year Forward Natural Rate in the
+  DSGE and Laubach-Williams Estimate of r*) corresponds to `Figures/Figure13.pdf`
+- Figure 13 (30-Year Forward Natural Rate and its Drivers) corresponds
+  to `Figures/Figure14.pdf`
+- Figure 14 (Drivers of rbar in the VAR model with Consumption) corresponds
+  to `Figures/Figure10.pdf`
+- Figures 15 and 16 are properly named.
