@@ -1,9 +1,13 @@
 using DSGE, ClusterManagers, HDF5
 
+##########################################################################################
+## SETUP
+##########################################################################################
+
 # What do you want to do?
 run_estimation     = false
 run_modal_forecast = false
-run_full_forecast  = true
+run_full_forecast  = false
 
 # Initialize model object
 # Note that the default for m1010 uses 6 anticipated shocks
@@ -33,6 +37,10 @@ m <= Setting(:forecast_block_size,  500)
 nworkers = 30
 addprocsfcn = addprocs_sge # choose to work with your scheduler; see ClusterManagers.jl
 
+##########################################################################################
+## RUN
+##########################################################################################
+
 # Run estimation
 if run_estimation
 
@@ -57,10 +65,6 @@ end
 
 # Forecast step: produces smoothed histories and shock decompositions
 if run_modal_forecast || run_full_forecast
-
-    # overrides = forecast_input_file_overrides(m)
-    # overrides[:mode] = rawpath(m, "estimate", "paramsmode.h5")
-    # overrides[:full] = rawpath(m, "estimate", "mhsave.h5")
 
     # what do we want to produce?
     output_vars = [:histpseudo, :forecastpseudo, :shockdecpseudo]
@@ -107,10 +111,6 @@ if run_modal_forecast || run_full_forecast
                                         vars = shockdec_vars,
                                         forecast_string = forecast_string)
 
-            # shockdec_vars = [:obs_corepce]
-            # write_meansbands_tables_all(m, :full, cond_type, [:shockdecobs, :trendobs, :dettrendobs],
-            #                             vars = shockdec_vars,
-            #                             forecast_string = forecast_string)
         end
     end
 end
