@@ -32,7 +32,7 @@ if ~exist(figurespath)
 end
 
 % File suffix common to all files
-tvarTablespath = 'Tables/';
+tvarTablespath = fullfile('..', 'tvar', 'output_data');
 dsgeTablespath = fullfile('..', 'dsge', 'output_data', 'm1010', 'ss18', ...
     'forecast', 'tables');
 suffix = '_cond=none_para=full_vint=161223.csv';
