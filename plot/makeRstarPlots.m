@@ -35,7 +35,7 @@ end
 tvarTablespath = fullfile('..', 'tvar', 'output_data');
 dsgeTablespath = fullfile('..', 'dsge', 'output_data', 'm1010', 'ss18', ...
     'forecast', 'tables');
-otherTablespath = fullfile('Tables');
+otherTablespath = 'Tables/';
 suffix = '_cond=none_para=full_vint=161223.csv';
 
 % Do we want to label shockdecs with trend (adjustLevel = 1) or starting at 0?
