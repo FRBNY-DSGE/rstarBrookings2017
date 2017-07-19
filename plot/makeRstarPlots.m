@@ -35,6 +35,7 @@ end
 tvarTablespath = fullfile('..', 'tvar', 'output_data');
 dsgeTablespath = fullfile('..', 'dsge', 'output_data', 'm1010', 'ss18', ...
     'forecast', 'tables');
+otherTablespath = fullfile('Tables');
 suffix = '_cond=none_para=full_vint=161223.csv';
 
 % Do we want to label shockdecs with trend (adjustLevel = 1) or starting at 0?
@@ -118,11 +119,11 @@ TVAR_time     = datenum(TVAR_shockdec.date);
 
 %% Laubach Williams
 %% Import Laubach Williams data
-rstarLW = csvread([tvarTablespath, 'LaubachWilliamsrstar.csv'],1,1);
+rstarLW = csvread([otherTablespath, 'LaubachWilliamsrstar.csv'],1,1);
 
 %% Refcorp
 
-[DATA,TEXT] = xlsread(fullfile(tvarTablespath, 'Refcorp.xlsx'),'Sheet1');
+[DATA,TEXT] = xlsread(fullfile(otherTablespath, 'Refcorp.xlsx'),'Sheet1');
 
 TimeRefcorp = datenum(DATA(:,1))+datenum('12-30-1899','mm-dd-yyyy');
 Refcorp5Y  = DATA(:,9);
@@ -372,7 +373,7 @@ load(fullfile(tvarTablespath,'OutMod3forCharts')); % Data from the model with Pi
 
 %%% GZ Spreads
 
-[DATA,TEXT] = xlsread(fullfile(tvarTablespath,'gz_spreads.xlsx'),'Sheet1');
+[DATA,TEXT] = xlsread(fullfile(otherTablespath,'gz_spreads.xlsx'),'Sheet1');
 TimeGZ = datenum(DATA(:,1))+datenum('12-30-1899','mm-dd-yyyy');
 
 GZspread = DATA(:,2);
@@ -410,10 +411,10 @@ printpdf(f,filename, 'square', 1);
 
 %%% Industrial spreads
 
-[DATA,TEXT] = xlsread(fullfile(tvarTablespath, 'Bloomberg_rstar_spreads.xlsx'),'monthly');
+[DATA,TEXT] = xlsread(fullfile(otherTablespath, 'Bloomberg_rstar_spreads.xlsx'),'monthly');
 IndustrialA_spread = DATA(:,6);
 TimeIndustrial_monthly = datenum(DATA(:,1))+datenum('12-30-1899','mm-dd-yyyy');
-[DATA,TEXT] = xlsread(fullfile(tvarTablespath, 'Bloomberg_rstar_spreads.xlsx'),'quarterly');
+[DATA,TEXT] = xlsread(fullfile(otherTablespath, 'Bloomberg_rstar_spreads.xlsx'),'quarterly');
 IndustrialBBB_spread = DATA(:,7);
 TimeIndustrial_quarterly = datenum(DATA(:,1))+datenum('12-30-1899','mm-dd-yyyy');
 
