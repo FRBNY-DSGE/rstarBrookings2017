@@ -28,7 +28,7 @@ addpath('helperFunctions');
 figurespath = 'Figures/';
 
 if ~exist(figurespath)
-  mkdir figurespath;
+  mkdir(figurespath);
 end
 
 % File suffix common to all files
