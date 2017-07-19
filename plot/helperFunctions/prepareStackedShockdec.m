@@ -1,5 +1,5 @@
 function [barPos, barNeg, l1] =  prepareStackedShockdec(filename, trendFilename, shockdecStart, ...
-	shockdecEnd, shockcatNames, shockcatNames, shockdecColors, varargin)
+	shockdecEnd, shockcatGroups, shockcatNames, shockdecColors, varargin)
 %% PREPARESTACKEDSHOCKDEC
 %  Read in shockdec, trend, and deterministic trend, do some preparations, and
 %  plot stacked shockdec.
@@ -41,9 +41,9 @@ end
 % Read in shockdec and sum up all the shock categories
 shockdecTable = readtable(filename);
 shockcats = {};
-for i = 1:length(shockcatNames)
-  inds = cellfun(@(x) find(strcmp(tbl.Properties.VariableNames, x)), ...
-      shockcatNames{1}, 'UniformOutput', false)
+for i = 1:length(shockcatGroups)
+  inds = cellfun(@(x) find(strcmp(shockdecTable.Properties.VariableNames, x)), ...
+      shockcatGroups{i}, 'UniformOutput', false)
   shockcats{i} = cell2mat(inds);
 end
 time          = datenum(shockdecTable.date(:));

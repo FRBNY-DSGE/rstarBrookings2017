@@ -666,8 +666,8 @@ shockcats   = {{'b_liqtil_sh', 'b_liqp_sh', 'b_safetil_sh', 'b_safep_sh'}; ...
 shockdecColors = {red; green; blue; 'LightGray'};
 shockcatNames = {'Convenience Yield'; 'Risk'; 'Productivity'; 'Other'};
 
-filename = [dsgeTablespath, 'shockdecForward30YearRealNaturalRate', suffix];
-trendFilename = [dsgeTablespath, 'trendForward30YearRealNaturalRate', suffix];
+filename = [dsgeTablespath, '/shockdecForward30YearRealNaturalRate', suffix];
+trendFilename = [dsgeTablespath, '/trendForward30YearRealNaturalRate', suffix];
 
 fig14 = figure('Name','Figure 14','NumberTitle','off');
 [barPos, tmp, tmp] = prepareStackedShockdec(filename,  trendFilename, shockdecStart,...
@@ -706,8 +706,8 @@ shockcats     = {{'b_liqtil_sh', 'b_liqp_sh', 'b_safetil_sh', 'b_safep_sh'}; ...
                  {'sigma_omega_sh'}; {'z_sh', 'zp_sh'}; {'mu_sh', 'g_sh'}};
 shockdecColors = {red; green; blue; 'LightGray'};
 shockcatNames = {'Convenience Yield'; 'Risk'; 'Productivity'; 'Other'};
-filename = [dsgeTablespath, 'shockdecRealNaturalRate', suffix];
-trendFilename = [dsgeTablespath, 'trendRealNaturalRate', suffix];
+filename = [dsgeTablespath, '/shockdecRealNaturalRate', suffix];
+trendFilename = [dsgeTablespath, '/trendRealNaturalRate', suffix];
 fig16 = figure('Name','Figure 16','NumberTitle','off');
 [barPos, tmp, tmp] = prepareStackedShockdec(filename, trendFilename, shockdecStart,...
     shockdecEnd, shockcats, shockcatNames, shockdecColors, 'fig', fig16);
