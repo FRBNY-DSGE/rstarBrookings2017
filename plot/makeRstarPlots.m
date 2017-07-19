@@ -37,55 +37,16 @@ dsgeTablespath = fullfile('..', 'dsge', 'output_data', 'm1010', 'ss18', ...
     'forecast', 'tables');
 suffix = '_cond=none_para=full_vint=161223.csv';
 
-% Do I want to label shockdecs with trend (adjustLevel = 1) or starting at 0?
+% Do we want to label shockdecs with trend (adjustLevel = 1) or starting at 0?
 adjustLevel = 1;
 
-% For smoothed histories, which columns contain the 68% bands?
-columns = [1,2,7,5,6];
-
-% % For shock decompositions, which columns contain which shocks?
-% % Financial
-% b_safetil_sh = 20;
-% b_safep_sh   = 7;
-% b_liqp_sh    = 19;
-% b_liqtil_sh  = 22;
-% sigw_sh      = 17;
-
-% % MEI
-% mu_sh = 25;
-
-% % Productivity
-% zp_sh = 12;
-% z_sh  = 13;
-
-% % Aggregate demand
-% g_sh = 24;
-
-% % Markup
-% lambda_f_sh = 10;
-% lambda_w_sh = 15;
-
-% % Monetary Policy
-% rm_sh = 9;
-% rm_shl1 = 28;
-% rm_shl2 = 14;
-% rm_shl3 = 2;
-% rm_shl4 = 29;
-% rm_shl5 = 5;
-% rm_shl6 = 27;
-
-% % Other
-% AAA_sh = 1;
-% BBB_sh = 3;
-% corepce_sh = 18;
-% gdi_sh = 6;
-% gdp_sh = 16;
-% gdpdef_sh = 30;
-% pi_star_sh = 23;
-% mu_e_sh = 21;
-% gamma_sh = 8;
-% lr_sh = 26;
-% tfp_sh = 11;
+% This numbers the columns of the DSGE output tables (NOT including the dates).
+% spec1010_18_2016Q3_1223.jl is set up to print the bands from widest on the
+% outside to narrowest on the inside, with the mean in the right-hand
+% column (so, in the CSV, the 95% bands are in columns 1 and 4, the 68% bands
+% are in columns 2 and 3, and the mean is in column 5). The plotting code
+% requires that the mean be in the middle, so we reorder the columns here.
+columns = [1,2,5,3,4];
 
 % Start/end dates
 shockdecStart = datenum('1960-03-31');
