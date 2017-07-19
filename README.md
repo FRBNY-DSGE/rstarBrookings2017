@@ -42,7 +42,8 @@ All results are plotted using MATLAB 16a.
       - `tables/`: LaTeX tables of post-estimation results (shock
                    decomopositions, parameter histories)
 
-- `tvar/`: replication code for TVAR model
+- `tvar/`: results for TVAR model
+  - `output_data/`: output files for all TVAR models
 
 - `plot/`: MATLAB code for plotting all results
 	- `makeRstarPlots.m`: Main driver script
@@ -87,3 +88,4 @@ ClusterManagers.jl).
 
 ## How to run plots
 
+See the README.md file in the `plot` directory.
