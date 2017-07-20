@@ -41,6 +41,9 @@ suffix = '_cond=none_para=full_vint=161223.csv';
 % Do we want to label shockdecs with trend (adjustLevel = 1) or starting at 0?
 adjustLevel = 1;
 
+% Use Bloomberg data?
+useBloombergData = 0;
+
 % This numbers the columns of the DSGE output tables (NOT including the dates).
 % spec1010_18_2016Q3_1223.jl is set up to print the bands from widest on the
 % outside to narrowest on the inside, with the mean in the right-hand
@@ -155,6 +158,7 @@ purple = [.494 .204 .624]; orange = [.937 .506 .275]; sea_green = [.18; .62; .48
 fig1 = figure(1);
 l1 = PlotStatesShadedv3_oneband(time,rstarTrendyVAR(:,2:4));
 hold on;
+keyboard
 l2 = PlotStatesShadedv3_oneband(time,DSGE_rstar30fwd(:,2:4),[0 0 1], 0.2);
 hold off;
 leg = legend([l1,l2], 'VAR', 'DSGE', 'location', 'SouthWest','interpreter','latex');
@@ -408,15 +412,17 @@ hold off
 filename = fullfile(figurespath, 'Figure7a');
 printpdf(f,filename, 'square', 1);
 
-
 %%% Industrial spreads
 
-[DATA,TEXT] = xlsread(fullfile(otherTablespath, 'Bloomberg_rstar_spreads.xlsx'),'monthly');
-IndustrialA_spread = DATA(:,6);
-TimeIndustrial_monthly = datenum(DATA(:,1))+datenum('12-30-1899','mm-dd-yyyy');
-[DATA,TEXT] = xlsread(fullfile(otherTablespath, 'Bloomberg_rstar_spreads.xlsx'),'quarterly');
-IndustrialBBB_spread = DATA(:,7);
-TimeIndustrial_quarterly = datenum(DATA(:,1))+datenum('12-30-1899','mm-dd-yyyy');
+if useBloombergData
+  [DATA,TEXT] = xlsread(fullfile(otherTablespath, 'spreads.xlsx'),'monthly');
+  IndustrialA_spread = DATA(:,2);
+  TimeIndustrial_monthly = datenum(DATA(:,1))+datenum('12-30-1899','mm-dd-yyyy');
+
+  [DATA,TEXT] = xlsread(fullfile(otherTablespath, 'spreads.xlsx'),'quarterly');
+  IndustrialBBB_spread = DATA(:,3);
+  TimeIndustrial_quarterly = datenum(DATA(:,1))+datenum('12-30-1899','mm-dd-yyyy');
+end
 
 f = figure('Name','Figure 7(b)','NumberTitle','off');
 bands(Time,qCy_bar)
@@ -429,7 +435,9 @@ ylim([0 5])
 set(gca,'YTick',[-1:1.0:5])
 hold on
 yyaxis right
-plot(TimeIndustrial_quarterly,IndustrialBBB_spread)
+if useBloombergData
+  plot(TimeIndustrial_quarterly,IndustrialBBB_spread)
+end
 ylim([0 5])
 set(gca,'YTick',[0:1:5])
 set(gca,'XLim',[715877 736605]);
@@ -448,7 +456,9 @@ ylim([0 2])
 set(gca,'YTick',[0:0.5:2])
 hold on
 yyaxis right
-plot(TimeIndustrial_monthly,IndustrialA_spread)
+if useBloombergData
+  plot(TimeIndustrial_monthly,IndustrialA_spread)
+end
 ylim([-0.3 3.2])
 set(gca,'YTick',[-3:0.5:7])
 set(gca,'XLim',[715877 736605]);
