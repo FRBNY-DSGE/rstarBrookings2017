@@ -26,8 +26,8 @@ Bloomberg yields. We cannot distribute this dataset, but if you have
 access to Bloomberg data you can aquire the data using the following
 tickers:
 
-- US Industrials 20Y A yield: `BVCSUP20`
-- US Industrials 20Y BBB yield: `IGUUAD20`
+- US Industrials 20Y A yield: `F00620Y Index`
+- US Industrials 20Y BBB yield: `F00920Y Index`
 
 Our 20T yield series comes from the Haver DLX ticker `FYCCZKE@USECON`.
 
