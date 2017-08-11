@@ -158,7 +158,7 @@ purple = [.494 .204 .624]; orange = [.937 .506 .275]; sea_green = [.18; .62; .48
 fig1 = figure(1);
 l1 = PlotStatesShadedv3_oneband(time,rstarTrendyVAR(:,2:4));
 hold on;
-keyboard
+
 l2 = PlotStatesShadedv3_oneband(time,DSGE_rstar30fwd(:,2:4),[0 0 1], 0.2);
 hold off;
 leg = legend([l1,l2], 'VAR', 'DSGE', 'location', 'SouthWest','interpreter','latex');
@@ -660,7 +660,7 @@ l5 = plot(time,rstarLW,'Color',green,'LineWidth',2.0);
 ylim([-2 7])
 set(gca, 'YTick', -2:1:7)
 hold off;
-leg = legend([l3,l5], 'DSGE', 'Laubach-Williams')
+leg = legend([l3,l5], 'DSGE', 'Laubach-Williams');
 set(leg,'interpreter', 'latex')
 ylim([-1,7]);
 printpdf(fig13,[figurespath, 'Figure13'], 'square', 0);

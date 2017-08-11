@@ -43,7 +43,7 @@ shockdecTable = readtable(filename);
 shockcats = {};
 for i = 1:length(shockcatGroups)
   inds = cellfun(@(x) find(strcmp(shockdecTable.Properties.VariableNames, x)), ...
-      shockcatGroups{i}, 'UniformOutput', false)
+      shockcatGroups{i}, 'UniformOutput', false);
   shockcats{i} = cell2mat(inds);
 end
 time          = datenum(shockdecTable.date(:));
