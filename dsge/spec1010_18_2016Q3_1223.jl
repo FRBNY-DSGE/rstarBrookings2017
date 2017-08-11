@@ -19,7 +19,6 @@ saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
 m <= Setting(:data_vintage, "161223")
-# m <= Setting(:use_population_forecast, true)
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation

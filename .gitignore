@@ -1,1 +1,5 @@
+dsge/output_data/*/*/estimate/work
+dsge/output_data/*/*/estimate/tables
+dsge/output_data/*/*/forecast
 plot/Tables/Bloomberg_rstar_spreads.xlsx
+plot/Figures*

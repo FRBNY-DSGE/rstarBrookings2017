@@ -24,8 +24,11 @@ clear all;
 close all;
 addpath('helperFunctions');
 
+% Run with DSGE subspec 18 or 20?
+subspec = 20;
+
 % Set up output directory for figures
-figurespath = 'Figures/';
+figurespath = ['Figures', int2str(subspec), '/'];
 
 if ~exist(figurespath)
   mkdir(figurespath);
@@ -33,7 +36,7 @@ end
 
 % File suffix common to all files
 tvarTablespath = fullfile('..', 'tvar', 'output_data');
-dsgeTablespath = fullfile('..', 'dsge', 'output_data', 'm1010', 'ss18', ...
+dsgeTablespath = fullfile('..', 'dsge', 'output_data', 'm1010', ['ss', int2str(subspec)], ...
     'forecast', 'tables');
 otherTablespath = 'Tables/';
 suffix = '_cond=none_para=full_vint=161223.csv';
