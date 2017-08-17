@@ -35,13 +35,13 @@ hand side of this screen, and then clicking "Download ZIP".
 
 - `dsge/`: Julia replication code for DSGE model
 
-  - `spec1010_18_2016Q3_1221.jl`: main script that generates all results
+  - `spec1010_20_2016Q3_1221.jl`: main script that generates all results
 
   - `input_data`:
     - `data/`: transformed input data
 	- `user/`: precomputed mode and hessian files
 
-  - `output_data/m1010/ss18/`:
+  - `output_data/m1010/ss20/`:
     - `estimate/`:
 	  - `raw/`: raw estimation outputs: parameter draws from Metropolis-Hastings
 	  - `tables/`: LaTeX tables of parameter moments
@@ -66,7 +66,7 @@ hand side of this screen, and then clicking "Download ZIP".
 
 ## How to run the DSGE code
 
-The script `spec1010_18_2016Q3_1221.jl` generates all results for the
+The script `spec1010_20_2016Q3_1221.jl` generates all results for the
 DSGE model. As provided, the script will create a model object with
 the appropriate settings to estimate the model, compute smoothed
 histories of pseudoobservables, and produce shock decompositions
@@ -94,7 +94,7 @@ across all draws. Since we compute results for 20,000 parameter draws,
 we parallelize this computation across 50 workers. Blocks of 500 draws
 each are sent to the workers, which compute and record results
 draw-by-draw. If you are not working with a cluster, set `nworkers =
-1` in `spec1010_18_2016Q3_1221.jl` (under "Parallelization"). If you
+1` in `spec1010_20_2016Q3_1221.jl` (under "Parallelization"). If you
 have a cluster, set `addprocsfcn` appropriately for your machine (see
 ClusterManagers.jl).
 
