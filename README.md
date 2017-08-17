@@ -16,13 +16,20 @@ All results are plotted using MATLAB 16a.
 
 ## Required software
 - Julia v0.5.0 or above
-- DSGE.jl v0.2.0 or above
+- DSGE.jl v0.3.1
 - MATLAB 16a
 
 **Download instructions**
 
 1. Download Julia from `https://julialang.org/downloads/`.
-2. Open the Julia REPL and type `Pkg.add("DSGE")`
+2. Open the Julia REPL and type:
+
+   a. `Pkg.add("DSGE")` to install DSGE.jl
+
+   b. `Pkg.pin("DSGE", v"0.3.1")` to use DSGE.jl v0.3.1
+
+   c. If, after running this replication code, you would like to use the most
+      current version of DSGE.jl, type `Pkg.free("DSGE")` to un-pin the version
 
 ## Installing this repository
 
