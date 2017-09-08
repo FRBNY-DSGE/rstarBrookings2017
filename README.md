@@ -2,7 +2,7 @@
 
 Replication files for *Safety, Liquidity and the Natural Rate of
 Interest* by Marco del Negro, Domenico Giannone, Marc Giannoni, and
-Andrea Tambalotti, presented at Brookings in March 2017
+Andrea Tambalotti, presented at Brookings in March 2017.
 
 ## Notes
 
@@ -62,14 +62,17 @@ hand side of this screen, and then clicking "Download ZIP".
                    decomopositions, parameter histories)
 
 - `tvar/`: results for TVAR model
+  - `MainModelX.m`: main scripts that generate all the results
+  - `DataCompleteLatest.xls`: input data
+  - `FiguresModelX/`: output figures for each model specification
+  - `Routines/`: functions called to run estimation and produce figures
   - `output_data/`: output files for all TVAR models
 
 - `plot/`: MATLAB code for plotting all results
-	- `makeRstarPlots.m`: Main driver script
-	- `helperFunctions/`: MATLAB functions called by `makeRstarPlots`
-	- `Figures/`: Output figure directory
-	- `Tables/`: Input table directory
-
+  - `makeRstarPlots.m`: Main driver script
+  - `helperFunctions/`: MATLAB functions called by `makeRstarPlots`
+  - `Figures/`: Output figure directory
+  - `Tables/`: Input table directory
 
 ## How to run the DSGE code
 
@@ -104,6 +107,21 @@ draw-by-draw. If you are not working with a cluster, set `nworkers =
 1` in `spec1010_20_2016Q3_1221.jl` (under "Parallelization"). If you
 have a cluster, set `addprocsfcn` appropriately for your machine (see
 ClusterManagers.jl).
+
+## How to run the TVAR code
+
+The `MainModelX.m` scripts generate results for TVAR model (each script named
+according to the model number `X` specified in the paper). As provided, each
+script estimates the TVAR model for the given specification, outputs a `.mat`
+file of estimation results, produces figures for the distribution of trends, and
+prints the change in trends for the variables specified in the model.
+
+If `RunEstimation = 1`, the code will run the estimation for the specified
+model. If `RunEstimation = 0`, the code will load the estimation results from a
+previous estimation. The first time the code is run, `RunEstimation` should be
+set to `1` to run the estimation and produce the necessary results.
+
+We ran the estimation scripts in MATLAB R2016a.
 
 ## How to run plots
 
