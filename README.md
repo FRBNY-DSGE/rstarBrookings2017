@@ -3,19 +3,11 @@
 Replication files for
 [*Safety, Liquidity, and the Natural Rate of Interest*](https://www.brookings.edu/bpea-articles/safety-liquidity-and-the-natural-rate-of-interest/)
 by Marco del Negro, Domenico Giannone, Marc Giannoni, and Andrea Tambalotti,
-presented at Brookings in March 2017.
+*Brookings Papers on Economic Activity*, Spring 2017: 235-294.
 
-## Notes
-
-The "forecast step" (which produces smoothed histories of states and
-shock decompositions) for the full distribution of DSGE parameter
-draws was run in parallel on 50 workers. Each worker produced results
-for a block of 500 parameter draws. See `How to run the DSGE code`
-below for details on how to adjust for your machine.
-
-All results are plotted using MATLAB 16a.
 
 ## Required software
+
 - Julia v0.5.0 or above
 - DSGE.jl v0.3.1
 - MATLAB 16a
@@ -32,12 +24,14 @@ All results are plotted using MATLAB 16a.
    c. If, after running this replication code, you would like to use the most
       current version of DSGE.jl, type `Pkg.free("DSGE")` to un-pin the version
 
+
 ## Installing this repository
 
 Git users are welcome to fork this repository and clone it for local
 use. Non-Git users will probably find it easiest to download the zip
 file by clicking on the green `Clone or download` button on the right
 hand side of this screen, and then clicking "Download ZIP".
+
 
 ## Directory structure
 
@@ -75,6 +69,7 @@ hand side of this screen, and then clicking "Download ZIP".
   - `Figures/`: Output figure directory
   - `Tables/`: Input table directory
 
+
 ## How to run the DSGE code
 
 The script `spec1010_20_2016Q3_1221.jl` generates all results for the
@@ -109,6 +104,7 @@ draw-by-draw. If you are not working with a cluster, set `nworkers =
 have a cluster, set `addprocsfcn` appropriately for your machine (see
 ClusterManagers.jl).
 
+
 ## How to run the TVAR code
 
 The `MainModelX.m` scripts generate results for TVAR model (each script named
@@ -124,6 +120,8 @@ set to `1` to run the estimation and produce the necessary results.
 
 We ran the estimation scripts in MATLAB R2016a.
 
+
 ## How to run plots
 
-See the README.md file in the `plot` directory.
+See the README.md file in the `plot` directory. All results are plotted using
+MATLAB 16a.
