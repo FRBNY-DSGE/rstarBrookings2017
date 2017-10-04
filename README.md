@@ -9,7 +9,7 @@ by Marco del Negro, Domenico Giannone, Marc Giannoni, and Andrea Tambalotti,
 ## Required software
 
 - Julia v0.5.0 or above
-- DSGE.jl v0.3.1
+- [DSGE.jl](https://github.com/FRBNY-DSGE/DSGE.jl) v0.3.1
 - MATLAB 16a
 
 **Download instructions**
@@ -27,7 +27,7 @@ by Marco del Negro, Domenico Giannone, Marc Giannoni, and Andrea Tambalotti,
 
 ## Installing this repository
 
-Git users are welcome to fork this repository and clone it for local
+Git users are welcome to fork this repository or clone it for local
 use. Non-Git users will probably find it easiest to download the zip
 file by clicking on the green `Clone or download` button on the right
 hand side of this screen, and then clicking "Download ZIP".
