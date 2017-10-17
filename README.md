@@ -6,6 +6,17 @@ by Marco del Negro, Domenico Giannone, Marc Giannoni, and Andrea Tambalotti,
 *Brookings Papers on Economic Activity*, Spring 2017: 235-294.
 
 
+## Updated r* estimates
+
+The
+[Excel file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/Rstar_2017Q2.xls)
+contains updated estimates of the low-frequency component of r* computed using
+the VAR model shown in Figure 1 of the paper, updated as of October 2017. The
+figure below shows updated estimates of r* and the liquidity/safety component.
+
+<img src="https://raw.githubusercontent.com/FRBNY-DSGE/rstarBrookings2017/master/update/Rstar_Figure.png" width="500">
+
+
 ## Required software
 
 - Julia v0.5.0 or above
