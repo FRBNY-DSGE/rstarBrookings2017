@@ -18,7 +18,7 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "161223")
+m <= Setting(:data_vintage, "180108")
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
@@ -27,13 +27,13 @@ m <= Setting(:reoptimize, true)
 m <= Setting(:calculate_hessian, true)
 
 # Settings for forecast dates
-m <= Setting(:date_forecast_start,  quartertodate("2016-Q4"))
-m <= Setting(:date_conditional_end, quartertodate("2016-Q4"))
+m <= Setting(:date_forecast_start,  quartertodate("2018-Q1"))
+m <= Setting(:date_conditional_end, quartertodate("2018-Q1"))
 m <= Setting(:shockdec_startdate,   Nullable(date_mainsample_start(m)))
 
 # Parallelization
 m <= Setting(:forecast_block_size,  500)
-nworkers = 1
+nworkers = 25
 addprocsfcn = addprocs_sge # choose to work with your scheduler; see ClusterManagers.jl
 
 ##########################################################################################
@@ -70,6 +70,11 @@ end
 # Forecast step: produces smoothed histories and shock decompositions
 if run_modal_forecast || run_full_forecast
 
+    # set overrides
+    overrides = forecast_input_file_overrides(m)
+    overrides[:mode] = joinpath(saveroot, "output_data/m1010/ss20/estimate/raw/paramsmode_vint=161223.h5")
+    overrides[:full] = joinpath(saveroot, "output_data/m1010/ss20/estimate/raw/mhsave_vint=161223.h5")
+
     # what do we want to produce?
     output_vars = [:histpseudo, :forecastpseudo, :shockdecpseudo]
 
@@ -93,13 +98,13 @@ if run_modal_forecast || run_full_forecast
         my_procs = addprocsfcn(nworkers)
         @everywhere using DSGE
 
-        #forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
+        forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
         rstar_bands = [0.68, 0.95]
         compute_meansbands(m, :full, cond_type, output_vars; verbose = :high, density_bands = rstar_bands,
                            forecast_string = forecast_string)
         rmprocs(my_procs)
 
-        meansbands_matrix_all(m, :full, cond_type, output_vars; forecast_string = forecast_string)
+        meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string)
 
         # print history means and bands tables to csv
         table_vars = [:ExpectedAvg20YearRealNaturalRate, :RealNaturalRate,

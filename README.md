@@ -19,8 +19,8 @@ figure below shows updated estimates of r* and the liquidity/safety component.
 
 ## Required software
 
-- Julia v0.5.0 or above
-- [DSGE.jl](https://github.com/FRBNY-DSGE/DSGE.jl) v0.3.1
+- Julia v0.6.0 or above
+- [DSGE.jl](https://github.com/FRBNY-DSGE/DSGE.jl) v0.4.0
 - MATLAB 16a
 
 **Download instructions**
@@ -30,7 +30,7 @@ figure below shows updated estimates of r* and the liquidity/safety component.
 
    a. `Pkg.add("DSGE")` to install DSGE.jl
 
-   b. `Pkg.pin("DSGE", v"0.3.1")` to use DSGE.jl v0.3.1
+   b. `Pkg.pin("DSGE", v"0.4.0")` to use DSGE.jl v0.4.0
 
    c. If, after running this replication code, you would like to use the most
       current version of DSGE.jl, type `Pkg.free("DSGE")` to un-pin the version
@@ -49,6 +49,8 @@ hand side of this screen, and then clicking "Download ZIP".
 - `dsge/`: Julia replication code for DSGE model
 
   - `spec1010_20_2016Q3_1221.jl`: main script that generates all results
+
+  - `spec1010_20_2018Q1_0108.jl`: script that generates updated results as of 2018Q1
 
   - `input_data`:
     - `data/`: transformed input data
