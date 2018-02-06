@@ -8,11 +8,15 @@ by Marco del Negro, Domenico Giannone, Marc Giannoni, and Andrea Tambalotti,
 
 ## Updated r* estimates
 
-The
-[Excel file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/Rstar_2017Q2.xls)
+The [VAR Excel
+file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/TVAR_Rstar_2017Q3.xls)
 contains updated estimates of the low-frequency component of r* computed using
-the VAR model shown in Figure 1 of the paper, updated as of October 2017. The
-figure below shows updated estimates of r* and the liquidity/safety component.
+the VAR model shown in Figure 1 of the paper and data through 2017Q3. The [DSGE
+Excel
+File](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/DSGE_Rstar_Vintages.xls)
+contains updated estimated of the 5, 10, and 30 year forward r* rates computed
+using the DSGE model and data through 2017Q4.  The figure below shows updated
+estimates of r* and the liquidity/safety component.
 
 <img src="https://raw.githubusercontent.com/FRBNY-DSGE/rstarBrookings2017/master/update/Rstar_Figure.png" width="500">
 
