@@ -9,16 +9,18 @@ by Marco del Negro, Domenico Giannone, Marc Giannoni, and Andrea Tambalotti,
 ## Updated r* estimates
 
 The [VAR Excel
-file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/TVAR_Rstar_2017Q3.xls)
-contains updated estimates of the low-frequency component of r* computed using
-the VAR model shown in Figure 1 of the paper and data through 2017Q3. The [DSGE
-Excel
-File](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/DSGE_Rstar_Vintages.xls)
-contains updated estimated of the 5, 10, and 30 year forward r* rates computed
-using the DSGE model and data through 2017Q4.  The figure below shows updated
+file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/TVAR_Rstar_Vintages.xls)
+contains the original as well as updated estimates of the trends in the real
+return for safe and liquid assets, the convenience yield, and its safety and
+liquidity components computed using the VAR model. These are the estimates shown
+in Figures 1 (black lines), 4, and 5 of the paper.  The [DSGE Excel
+file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/DSGE_Rstar_Vintages.xls)
+contains original as well as updated estimates of the 30-year, 10-year, and
+5-year forward r* computed using the DSGE model. These are the estimates shown
+in Figures 1 (blue lines), and 12 of the paper.  The figure below shows updated
 estimates of r* and the liquidity/safety component.
 
-<img src="https://raw.githubusercontent.com/FRBNY-DSGE/rstarBrookings2017/master/update/Rstar_Figure.png" width="500">
+<img src="https://raw.githubusercontent.com/FRBNY-DSGE/rstarBrookings2017/master/update/Rstar_Figure.png" width="600">
 
 
 ## Required software
