@@ -1,4 +1,6 @@
 using DSGE, ClusterManagers, HDF5
+using Plots
+gr() # Or specify whichever plotting backend you prefer
 
 ##########################################################################################
 ## SETUP
@@ -8,7 +10,7 @@ using DSGE, ClusterManagers, HDF5
 run_estimation     = false
 run_modal_forecast = false
 run_full_forecast  = false
-remake_tables      = true
+make_tables        = false
 plot_irfs          = false
 plot_shockdecs     = false
 
@@ -71,7 +73,7 @@ if run_estimation
 end
 
 # Forecast step: produces smoothed histories and shock decompositions
-if run_modal_forecast || run_full_forecast || remake_tables
+if run_modal_forecast || run_full_forecast
 
     # set overrides
     overrides = forecast_input_file_overrides(m)
@@ -79,7 +81,8 @@ if run_modal_forecast || run_full_forecast || remake_tables
     overrides[:full] = joinpath(saveroot, "output_data/m1010/ss20/estimate/raw/mhsave_vint=161223.h5")
 
     # what do we want to produce?
-    output_vars = [:histobs, :histpseudo, :shockdecobs, :shockdecpseudo]
+    output_vars = [:histobs, :histpseudo, :shockdecobs, :shockdecpseudo, :irfobs,
+                   :irfpseudo]
 
     # conditional type
     cond_type = :none
@@ -101,7 +104,7 @@ if run_modal_forecast || run_full_forecast || remake_tables
         my_procs = addprocsfcn(nworkers)
         @everywhere using DSGE
 
-        # forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
+        forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
         rstar_bands = [0.68, 0.90, 0.95]
         compute_meansbands(m, :full, cond_type, output_vars; verbose = :high, density_bands = rstar_bands,
                            forecast_string = forecast_string)
@@ -109,66 +112,62 @@ if run_modal_forecast || run_full_forecast || remake_tables
 
         meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string)
     end
-
-    # print history means and bands tables to csv
-    table_vars = [:ExpectedAvg20YearRealNaturalRate, :RealNaturalRate,
-                  :Forward5YearRealNaturalRate, :Forward10YearRealNaturalRate,
-                  :Forward20YearRealNaturalRate, :Forward30YearRealNaturalRate]
-    write_meansbands_tables_all(m, :full, cond_type, [:histpseudo], forecast_string = forecast_string,
-                                vars = table_vars)
-
-    # print shockdec means and bands tables to csv
-    if any(x->contains(string(x), "shockdec"), output_vars)
-        shockdec_vars = [:ExpectedAvg20YearRealNaturalRate, :ExpectedAvg20YearRealRate, :OutputGap,
-                         :Forward5YearRealNaturalRate, :Forward10YearRealNaturalRate,
-                         :Forward20YearRealNaturalRate, :Forward30YearRealNaturalRate,
-                         :RealNaturalRate, :ExAnteRealRate]
-
-        write_meansbands_tables_all(m, :full, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
-                                    vars = shockdec_vars,
-                                    forecast_string = forecast_string)
-
-    end
 end
 
-if remake_tables
+if make_tables
+
+    # conditional type
+    cond_type = :none
+
+    # Forecast label: all forecast output filenames will contain this string
+    forecast_string = ""
+
     # print history means and bands tables to csv
-    table_vars = [:Forward5YearRealNaturalRate, :Forward10YearRealNaturalRate,
-                  :Forward30YearRealNaturalRate]
+    table_vars = [:ExAnteRealRate, :Forward5YearRealRate, :Forward10YearRealRate,
+                  :RealNaturalRate, :Forward5YearRealNaturalRate,
+                  :Forward10YearRealNaturalRate, :Forward20YearRealNaturalRate,
+                  :Forward30YearRealNaturalRate, :ExpectedAvg20YearRealNaturalRate]
     write_meansbands_tables_all(m, :full, cond_type, [:histpseudo], forecast_string = forecast_string,
                                 vars = table_vars)
 
     # print shockdec means and bands tables to csv
     write_meansbands_tables_all(m, :full, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
-                                    vars = table_vars,
-                                    forecast_string = forecast_string)
+                                vars = table_vars,
+                                forecast_string = forecast_string)
 
 end
 
 if plot_irfs
-    # ant_obs = [Symbol("obs_nominalrate" * string(i)) for i = 1:n_anticipated_shocks(m)]
-    # vars = setdiff(collect(keys(m.observables)), ant_obs)
-    vars =  [:RealNaturalRate, :Forward5YearRealNaturalRate,:Forward10YearRealNaturalRate,
-                 :Forward30YearRealNaturalRate, :y_t, :OutputGap]
-    irf_class = :pseudo
 
-    # shocks = [:b_sh, :σ_ω_sh, :μ_sh, :z_sh, :λ_f_sh, :rm_sh]
+    #############################################
+    # Change these settings as you see fit
+    #############################################
+    # It is recommended to only plot irfs for ≦ 6 variables so that the subplot aligns to
+    # a single page properly
+    vars =  [:RealNaturalRate, :Forward5YearRealNaturalRate,:Forward10YearRealNaturalRate,
+             :Forward30YearRealNaturalRate, :y_t, :OutputGap]
+
     shocks = [:b_liqp_sh, :b_liqtil_sh, :b_safep_sh, :b_safetil_sh,
               :z_sh, :zp_sh]
+
+    input_type = :full # :mode or :full depending on the forecast that you ran
+
+    all_plots = Vector{Plots.Plot}(length(shocks))
+    bands = input_type == :full ? ["68.0%", "95.0%"] : Vector{String}() # Can plot any of the bands given by rstar_bands above
+    save_plots = true # Whether or not you want to save your plots
+    #############################################
 
     # These are the shocks for whom we want to flip the impulse responses
     # (i.e. give the response to a +1 SD shock instead of the -1 SD shock
     # calculated by `impulse_responses`
-    flipped_shocks = shocks
+    flipped_shocks = [:σ_ω_sh, :z_sh, :λ_f_sh]
 
-    plotroots = "plots"
-    bands = Vector{String}()
-
-    for shock in shocks
+    for (i, shock) in enumerate(shocks)
         # Create individual plots
-        plots = plot_impulse_response(m, shock, vars, :pseudo, :full, :none;
+        plots = plot_impulse_response(m, shock, vars, :pseudo, input_type, :none;
                                       flip_sign = shock in flipped_shocks,
-                                      bands_pcts = bands)
+                                      bands_pcts = bands,
+                                      plotroot = "")
 
         # Plot all variables together
         nvars = length(vars)
@@ -179,16 +178,32 @@ if plot_irfs
         else
             collect(values(plots))
         end
-        p = plot(varplots..., layout = grid(nrows, 2), size = (650, 775))
+        p = plot(varplots..., layout = grid(nrows, 2), size = (650, 775), titlefontsize = 10)
+        all_plots[i] = p
 
-        # Save
-        fn = joinpath(plotroot, "Appendix_IRF_" * DSGE.detexify(string(shock)) * ".pdf")
-        DSGE.save_plot(p, fn)
+        if save_plots
+            # Save
+            fn = joinpath(plotroot, "IRF_" * DSGE.detexify(string(shock)) * "_vint=" * data_vintage(m) * ".pdf")
+            DSGE.save_plot(p, fn)
+        end
     end
 
 end
 
 if plot_shockdecs
+
+    #############################################
+    # Change these settings as you see fit
+    #############################################
+    start_date = DSGE.quarter_number_to_date(1994)
+    end_date = DSGE.quarter_number_to_date(2017.5)
+
+    vars = [:RealNaturalRate, :Forward5YearRealNaturalRate,
+            :Forward10YearRealNaturalRate, :Forward30YearRealNaturalRate]
+    shockdec_class = :pseudo
+    save_plots = true # Whether or not you want to save your plots
+    #############################################
+
     function paper_shock_groupings(m::Model1010)
         conv  = DSGE.ShockGroup("Conv Yield", [:b_liqtil_sh, :b_liqp_sh, :b_safetil_sh, :b_safep_sh],
                           RGB(.667, 0.29, 0.224))
@@ -202,23 +217,18 @@ if plot_shockdecs
         return [conv, risk, perm_prod, temp_prod, other]
     end
 
-    start_date = DSGE.quarter_number_to_date(1994)
-    end_date = DSGE.quarter_number_to_date(2017.5)
-
-    # vars = [:RealNaturalRate, :Forward5YearRealNaturalRate,
-    #         :Forward10YearRealNaturalRate, :Forward30YearRealNaturalRate]
-    # shockdec_class = :pseudo
-    vars = [:obs_tfp]
-    shockdec_class = :obs
+    # By default set to empty string if save_plots is false
+    plotroot = save_plots ? figurespath(m, "forecast") : ""
 
     plots = []
     for var in vars
-        p = plot_shock_decomposition(m, var, shockdec_class, :mode, :none,
-                                     #start_date = start_date,
+        p = plot_shock_decomposition(m, var, shockdec_class, :full, :none,
+                                     start_date = start_date,
                                      end_date = end_date,
-                                     fileformat = :png, legend = :left,
+                                     legend = :left,
                                      groups = paper_shock_groupings(m),
-                                     forecast_label = "")
+                                     forecast_label = "",
+                                     plotroot = plotroot)
         push!(plots, p)
     end
 end
