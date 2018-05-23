@@ -56,8 +56,6 @@ hand side of this screen, and then clicking "Download ZIP".
 
   - `spec1010_20_2016Q3_1221.jl`: main script that generates all results
 
-  - `spec1010_20_2018Q1_0108.jl`: script that generates updated results as of 2018Q1
-
   - `input_data`:
     - `data/`: transformed input data
 	- `user/`: precomputed mode and hessian files
