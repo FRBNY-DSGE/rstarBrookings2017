@@ -7,7 +7,7 @@ using DSGE, ClusterManagers, HDF5
 # What do you want to do?
 run_estimation     = false
 run_modal_forecast = false
-run_full_forecast  = false
+run_full_forecast  = true
 
 # Initialize model object
 # Note that the default for m1010 uses 6 anticipated shocks
@@ -102,18 +102,16 @@ if run_modal_forecast || run_full_forecast
         meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string)
 
         # print history means and bands tables to csv
-        table_vars = [:ExpectedAvg20YearRealNaturalRate, :RealNaturalRate,
-                      :Forward5YearRealNaturalRate, :Forward10YearRealNaturalRate,
-                      :Forward20YearRealNaturalRate, :Forward30YearRealNaturalRate]
+        table_vars = [:ExAnteRealRate, :Forward5YearRealRate, :Forward10YearRealRate,
+                      :RealNaturalRate, :Forward5YearRealNaturalRate,
+                      :Forward10YearRealNaturalRate, :Forward20YearRealNaturalRate,
+                      :Forward30YearRealNaturalRate]
         write_meansbands_tables_all(m, :full, cond_type, [:histpseudo], forecast_string = forecast_string,
                                     vars = table_vars)
 
         # print shockdec means and bands tables to csv
         if any(x->contains(string(x), "shockdec"), output_vars)
-            shockdec_vars = [:ExpectedAvg20YearRealNaturalRate, :ExpectedAvg20YearRealRate, :OutputGap,
-                             :Forward5YearRealNaturalRate, :Forward10YearRealNaturalRate,
-                             :Forward20YearRealNaturalRate, :Forward30YearRealNaturalRate,
-                             :RealNaturalRate, :ExAnteRealRate]
+            shockdec_vars = [:RealNaturalRate, :Forward30YearRealNaturalRate]
 
             write_meansbands_tables_all(m, :full, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
                                         vars = shockdec_vars,

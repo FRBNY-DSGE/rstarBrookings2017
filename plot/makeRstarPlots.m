@@ -61,49 +61,49 @@ shockdecEnd = datenum('2016-09-30');
 %% READ IN DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-tmp  = readtable(fullfile(dsgeTablespath,['histRealNaturalRate',suffix]));
+tmp  = readtable(fullfile(dsgeTablespath,['hist_RealNaturalRate',suffix]));
 time = datenum(tmp.date);
 
 %%%%%%% Smoothed histories
 %% Forward real rate smoothed history
 % Short term r
-tmp = csvread(fullfile(dsgeTablespath,['histExAnteRealRate',suffix]),...
+tmp = csvread(fullfile(dsgeTablespath,['hist_ExAnteRealRate',suffix]),...
     1, 1);
 DSGE_rST = tmp(:, columns);
 
 % 5yr fwd r
-tmp = csvread(fullfile(dsgeTablespath,['histForward5YearRealRate',suffix]),...
+tmp = csvread(fullfile(dsgeTablespath,['hist_Forward5YearRealRate',suffix]),...
     1, 1);
 DSGE_r5fwd = tmp(:, columns);
 
 % 10yr fwd r
-tmp = csvread(fullfile(dsgeTablespath,['histForward10YearRealRate',suffix]),...
+tmp = csvread(fullfile(dsgeTablespath,['hist_Forward10YearRealRate',suffix]),...
     1, 1);
 DSGE_r10fwd = tmp(:, columns);
 
 %% Forward real natural rate
 % ST r*
-tmp = csvread(fullfile(dsgeTablespath,['histRealNaturalRate',suffix]),...
+tmp = csvread(fullfile(dsgeTablespath,['hist_RealNaturalRate',suffix]),...
     1, 1);
 DSGE_rstarST = tmp(:, columns);
 
 % 5yr fwd rstar
-tmp = csvread(fullfile(dsgeTablespath,['histForward5YearRealNaturalRate',suffix]),...
+tmp = csvread(fullfile(dsgeTablespath,['hist_Forward5YearRealNaturalRate',suffix]),...
     1, 1);
 DSGE_rstar5fwd = tmp(:, columns);
 
 % 10yr fwd rstar
-tmp = csvread(fullfile(dsgeTablespath,['histForward10YearRealNaturalRate',suffix]),...
+tmp = csvread(fullfile(dsgeTablespath,['hist_Forward10YearRealNaturalRate',suffix]),...
     1, 1);
 DSGE_rstar10fwd = tmp(:, columns);
 
 % 20yr fwd rstar
-tmp = csvread(fullfile(dsgeTablespath,['histForward20YearRealNaturalRate',suffix]),...
+tmp = csvread(fullfile(dsgeTablespath,['hist_Forward20YearRealNaturalRate',suffix]),...
     1, 1);
 DSGE_rstar20fwd = tmp(:, columns);
 
 % 30yr fwd rstar
-tmp = csvread(fullfile(dsgeTablespath,['histForward30YearRealNaturalRate',suffix]),...
+tmp = csvread(fullfile(dsgeTablespath,['hist_Forward30YearRealNaturalRate',suffix]),...
     1, 1);
 DSGE_rstar30fwd = tmp(:, columns);
 
@@ -676,8 +676,8 @@ shockcats   = {{'b_liqtil_sh', 'b_liqp_sh', 'b_safetil_sh', 'b_safep_sh'}; ...
 shockdecColors = {red; green; blue; 'LightGray'};
 shockcatNames = {'Convenience Yield'; 'Risk'; 'Productivity'; 'Other'};
 
-filename = [dsgeTablespath, '/shockdecForward30YearRealNaturalRate', suffix];
-trendFilename = [dsgeTablespath, '/trendForward30YearRealNaturalRate', suffix];
+filename = [dsgeTablespath, '/shockdec_Forward30YearRealNaturalRate', suffix];
+trendFilename = [dsgeTablespath, '/trend_Forward30YearRealNaturalRate', suffix];
 
 fig14 = figure('Name','Figure 14','NumberTitle','off');
 [barPos, tmp, tmp] = prepareStackedShockdec(filename,  trendFilename, shockdecStart,...
@@ -716,8 +716,8 @@ shockcats     = {{'b_liqtil_sh', 'b_liqp_sh', 'b_safetil_sh', 'b_safep_sh'}; ...
                  {'sigma_omega_sh'}; {'z_sh', 'zp_sh'}; {'mu_sh', 'g_sh'}};
 shockdecColors = {red; green; blue; 'LightGray'};
 shockcatNames = {'Convenience Yield'; 'Risk'; 'Productivity'; 'Other'};
-filename = [dsgeTablespath, '/shockdecRealNaturalRate', suffix];
-trendFilename = [dsgeTablespath, '/trendRealNaturalRate', suffix];
+filename = [dsgeTablespath, '/shockdec_RealNaturalRate', suffix];
+trendFilename = [dsgeTablespath, '/trend_RealNaturalRate', suffix];
 fig16 = figure('Name','Figure 16','NumberTitle','off');
 [barPos, tmp, tmp] = prepareStackedShockdec(filename, trendFilename, shockdecStart,...
     shockdecEnd, shockcats, shockcatNames, shockdecColors, 'fig', fig16);
