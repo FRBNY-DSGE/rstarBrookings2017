@@ -93,13 +93,13 @@ if run_modal_forecast || run_full_forecast
         my_procs = addprocsfcn(nworkers)
         @everywhere using DSGE
 
-        #forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
+        forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
         rstar_bands = [0.68, 0.95]
         compute_meansbands(m, :full, cond_type, output_vars; verbose = :high, density_bands = rstar_bands,
                            forecast_string = forecast_string)
         rmprocs(my_procs)
 
-        meansbands_matrix_all(m, :full, cond_type, output_vars; forecast_string = forecast_string)
+        meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string)
 
         # print history means and bands tables to csv
         table_vars = [:ExpectedAvg20YearRealNaturalRate, :RealNaturalRate,
