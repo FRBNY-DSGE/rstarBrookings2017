@@ -81,8 +81,8 @@ if run_modal_forecast || run_full_forecast
     overrides[:full] = joinpath(saveroot, "output_data/m1010/ss20/estimate/raw/mhsave_vint=161223.h5")
 
     # what do we want to produce?
-    output_vars = [:histobs, :histpseudo, :shockdecobs, :shockdecpseudo, :irfobs,
-                   :irfpseudo]
+    output_vars = [:histobs, :histpseudo, :forecastobs, :forecastpseudo, :shockdecobs, :shockdecpseudo,
+                   :irfobs, :irfpseudo]
 
     # conditional type
     cond_type = :none
@@ -105,7 +105,8 @@ if run_modal_forecast || run_full_forecast
         @everywhere using DSGE
 
         forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
-        rstar_bands = [0.68, 0.90, 0.95]
+        rstar_bands = [0.68, 0.95] # Do not change these rstar_bands, since the makeRstarPlots.m file assumes
+                                   # the band ordering to be hard-coded
         compute_meansbands(m, :full, cond_type, output_vars; verbose = :high, density_bands = rstar_bands,
                            forecast_string = forecast_string)
         rmprocs(my_procs)
@@ -123,17 +124,16 @@ if make_tables
     forecast_string = ""
 
     # print history means and bands tables to csv
-    table_vars = [:ExAnteRealRate, :Forward5YearRealRate, :Forward10YearRealRate,
-                  :RealNaturalRate, :Forward5YearRealNaturalRate,
-                  :Forward10YearRealNaturalRate, :Forward20YearRealNaturalRate,
-                  :Forward30YearRealNaturalRate, :ExpectedAvg20YearRealNaturalRate]
+    vars = [:ExAnteRealRate, :Forward5YearRealRate, :Forward10YearRealRate,
+            :RealNaturalRate, :Forward5YearRealNaturalRate,
+            :Forward10YearRealNaturalRate, :Forward20YearRealNaturalRate,
+            :Forward30YearRealNaturalRate, :ExpectedAvg20YearRealNaturalRate]
     write_meansbands_tables_all(m, :full, cond_type, [:histpseudo], forecast_string = forecast_string,
-                                vars = table_vars)
+                                vars = vars)
 
     # print shockdec means and bands tables to csv
     write_meansbands_tables_all(m, :full, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
-                                vars = table_vars,
-                                forecast_string = forecast_string)
+                                vars = vars, forecast_string = forecast_string)
 
 end
 
