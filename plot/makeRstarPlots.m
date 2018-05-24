@@ -59,12 +59,12 @@ adjustLevel = 1;
 useBloombergData = 0;
 
 % This numbers the columns of the DSGE output tables (NOT including the dates).
-% spec1010_18_2016Q3_1223.jl is set up to print the bands from widest on the
-% outside to narrowest on the inside, with the mean in the right-hand
-% column (so, in the CSV, the 95% bands are in columns 1 and 4, the 68% bands
+% spec1010_18_2016Q3_1223.jl is set up to print the bands from narrowest on the
+% outside to widest on the inside, with the mean in the right-hand
+% column (so, in the CSV, the 68% bands are in columns 1 and 4, the 95% bands
 % are in columns 2 and 3, and the mean is in column 5). The plotting code
 % requires that the mean be in the middle, so we reorder the columns here.
-columns = [1,2,5,3,4];
+columns = [2,1,5,4,3];
 
 % Start/end dates
 shockdecStart = datenum('1960-03-31');
@@ -613,7 +613,7 @@ if makeTVARFigures
   % bands(Time,qR_bar_bands);
 
   hold off
-  printpdf(fig10, [figurespath, 'Figure10'], 'square', 0);
+  printpdf(fig10, [figurespath, 'Figure10'], 'square', 0, 'fontsize', 12);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -714,7 +714,7 @@ if makeDSGEFigures
     ymin = 1.0;
     ax1 = addTrendToShockdec(ax, trend, accuracy, 'ymax', ymax, 'ymin', ymin);
   end
-  printpdf(fig14, [figurespath, 'Figure14'], 'square', 0);
+  printpdf(fig14, [figurespath, 'Figure14'], 'square', 0, 'fontsize', 12);
 
 
   %% Figure 15: DSGE ST r and r*
@@ -747,5 +747,5 @@ if makeDSGEFigures
   legend(barPos, {'Convenience Yield'; 'Risk'; 'Productivity'; 'Other'}, 'interpreter', 'latex', ...
       'location', 'southoutside', 'orientation', 'horizontal');
   legend boxoff
-  printpdf(fig16, [figurespath, 'Figure16'], 'square', 0);
+  printpdf(fig16, [figurespath, 'Figure16'], 'square', 0, 'fontsize', 12);
 end

@@ -1,7 +1,7 @@
 function printpdf(h,outfilename, varargin)
 
-vars = {'square'};
-defaults = {'0'};
+vars = {'square', 'fontsize'};
+defaults = {0, 20};
 varargparse(varargin, vars, defaults);
 
 axs = findobj(h, 'type', 'axes');
@@ -18,6 +18,8 @@ end
 set(h, 'PaperUnits', 'inches');
 set(h, 'Units', 'inches');
 pos=get(h,'Position');
+
+set(gca, 'fontsize', fontsize);
 
 if square
   set(h,'PaperSize',[pos(3) pos(3)]);
