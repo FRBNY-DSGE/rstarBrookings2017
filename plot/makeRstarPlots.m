@@ -665,7 +665,7 @@ set(leg,'interpreter', 'latex')
 ylim([-1,7]);
 printpdf(fig13,[figurespath, 'Figure13'], 'square', 0);
 
-%% Figure 14: 20-year fwd r* and component attributable to convenience yield
+%% Figure 14: 30-year fwd r* and component attributable to convenience yield
 %shockcats     = {[b_liqtil_sh b_liqp_sh b_safetil_sh b_safep_sh]; ...
 %                 [mu_sh z_sh zp_sh g_sh sigw_sh]};
 %shockdecColors = {[191, 68, 68]./256; light_yellow};
