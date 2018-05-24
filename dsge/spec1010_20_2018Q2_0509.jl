@@ -117,7 +117,8 @@ end
 
 if make_tables
 
-    # conditional type
+    # input and conditional types
+    input_type = :mode
     cond_type = :none
 
     # Forecast label: all forecast output filenames will contain this string
@@ -128,11 +129,11 @@ if make_tables
             :RealNaturalRate, :Forward5YearRealNaturalRate,
             :Forward10YearRealNaturalRate, :Forward20YearRealNaturalRate,
             :Forward30YearRealNaturalRate, :ExpectedAvg20YearRealNaturalRate]
-    write_meansbands_tables_all(m, :full, cond_type, [:histpseudo], forecast_string = forecast_string,
+    write_meansbands_tables_all(m, input_type, cond_type, [:histpseudo], forecast_string = forecast_string,
                                 vars = vars)
 
     # print shockdec means and bands tables to csv
-    write_meansbands_tables_all(m, :full, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
+    write_meansbands_tables_all(m, input_type, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
                                 vars = vars, forecast_string = forecast_string)
 
 end
@@ -150,11 +151,12 @@ if plot_irfs
     shocks = [:b_liqp_sh, :b_liqtil_sh, :b_safep_sh, :b_safetil_sh,
               :z_sh, :zp_sh]
 
-    input_type = :full # :mode or :full depending on the forecast that you ran
+    input_type = :mode # :mode or :full depending on the forecast that you ran
 
     all_plots = Vector{Plots.Plot}(length(shocks))
-    bands = input_type == :full ? ["68.0%", "95.0%"] : Vector{String}() # Can plot any of the bands given by rstar_bands above
+    bands = input_type == :full ? ["68.0%", "95.0%"] : Vector{String}()
     save_plots = true # Whether or not you want to save your plots
+    plotroot = figurespath(m, "forecast")
     #############################################
 
     # These are the shocks for whom we want to flip the impulse responses
@@ -198,6 +200,8 @@ if plot_shockdecs
     start_date = DSGE.quarter_number_to_date(1994)
     end_date = DSGE.quarter_number_to_date(2017.5)
 
+    input_type = :mode
+
     vars = [:RealNaturalRate, :Forward5YearRealNaturalRate,
             :Forward10YearRealNaturalRate, :Forward30YearRealNaturalRate]
     shockdec_class = :pseudo
@@ -222,7 +226,7 @@ if plot_shockdecs
 
     plots = []
     for var in vars
-        p = plot_shock_decomposition(m, var, shockdec_class, :full, :none,
+        p = plot_shock_decomposition(m, var, shockdec_class, input_type, :none,
                                      start_date = start_date,
                                      end_date = end_date,
                                      legend = :left,
