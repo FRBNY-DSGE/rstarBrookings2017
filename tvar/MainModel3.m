@@ -10,7 +10,7 @@ setappdata(0, 'defaultAxesXTickFontSize', 1)
 setappdata(0, 'defaultAxesYTickFontSize', 1)
 
 addpath Routines
-rng('shuffle')
+rng(1, 'twister'); % for replicability
 
 
 RunEstimation = 1;
