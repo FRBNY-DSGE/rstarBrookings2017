@@ -60,7 +60,8 @@ if RunEstimation
     [T,n] = size(y);
     T70 = max(find(year(Time)==1970));
     Tzlb = max(find(year(Time)==2008));
-    y(Tzlb:end,ismember(Mnem,'BILL'))=NaN;
+    % y(Tzlb:end,ismember(Mnem,'BILL'))=NaN;
+    y(Tzlb:find(year(Time)==2016,1,'first'),ismember(Mnem,'BILL'))=NaN;
     y(1:T70,2)=NaN;
     %       1       2        3        4       5
     %      pi       r       ts      liq     safe
