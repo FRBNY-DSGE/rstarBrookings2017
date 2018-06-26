@@ -45,7 +45,7 @@ if RunEstimation
     
     
     FirstY = 1960;
-    LastY  = 2016;
+    LastY  = 2018;
     
     T0 = min(find(year(Time)==FirstY));
     T1 = max(find(year(Time)==LastY));
