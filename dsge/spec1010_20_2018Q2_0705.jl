@@ -10,7 +10,7 @@ gr() # Or specify whichever plotting backend you prefer
 run_estimation     = false
 run_modal_forecast = false
 run_full_forecast  = false
-make_tables        = false
+make_tables        = true
 plot_irfs          = false
 plot_shockdecs     = false
 
@@ -23,7 +23,7 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "180509")
+m <= Setting(:data_vintage, "180705")
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
@@ -38,7 +38,7 @@ m <= Setting(:shockdec_startdate,   Nullable(date_mainsample_start(m)))
 
 # Parallelization
 m <= Setting(:forecast_block_size,  500)
-nworkers = 20
+nworkers = 30
 addprocsfcn = addprocs_sge # choose to work with your scheduler; see ClusterManagers.jl
 
 ##########################################################################################
@@ -118,23 +118,26 @@ end
 if make_tables
 
     # input and conditional types
-    input_type = :mode
+    input_types = [:mode, :full]
     cond_type = :none
 
     # Forecast label: all forecast output filenames will contain this string
     forecast_string = ""
 
-    # print history means and bands tables to csv
     vars = [:ExAnteRealRate, :Forward5YearRealRate, :Forward10YearRealRate,
             :RealNaturalRate, :Forward5YearRealNaturalRate,
             :Forward10YearRealNaturalRate, :Forward20YearRealNaturalRate,
             :Forward30YearRealNaturalRate, :ExpectedAvg20YearRealNaturalRate]
-    write_meansbands_tables_all(m, input_type, cond_type, [:histpseudo], forecast_string = forecast_string,
-                                vars = vars)
 
-    # print shockdec means and bands tables to csv
-    write_meansbands_tables_all(m, input_type, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
-                                vars = vars, forecast_string = forecast_string)
+    for input_type in input_types
+        # print history means and bands tables to csv
+        write_meansbands_tables_all(m, input_type, cond_type, [:histpseudo], forecast_string = forecast_string,
+                                    vars = vars)
+
+        # print shockdec means and bands tables to csv
+        write_meansbands_tables_all(m, input_type, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
+                                    vars = vars, forecast_string = forecast_string)
+    end
 
 end
 
