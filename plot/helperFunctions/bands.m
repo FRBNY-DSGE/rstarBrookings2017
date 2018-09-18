@@ -53,7 +53,7 @@ end
 plot(x,zeros(size(x)),'k');
 
 set(gcf,'Color','w')
-set(gca,'XTick', Time(1:40:end),'XMinorTick','on')
+set(gca,'XTick', x(1:40:end),'XMinorTick','on')
 axis tight; box on;
 datetick('x', 'yyyy', 'keeplimits', 'keepticks')
 
