@@ -29,13 +29,13 @@ addpath('helperFunctions');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Update these!
-vint = '180705';
-quarter = '2018-03-31'; % Enter the current quarter (that is the last quarter for which we
+vint = '180914';
+quarter = '2018-06-30'; % Enter the current quarter (that is the last quarter for which we
                         % have data/estimates in YYYY-MM-DD format)
 
 % Which plots do you want to make?
 makeDSGEFigures = true;
-makeTVARFigures = false;
+makeTVARFigures = true;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set up output directory for figures
