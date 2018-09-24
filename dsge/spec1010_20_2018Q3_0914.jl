@@ -8,9 +8,8 @@ gr() # Or specify whichever plotting backend you prefer
 
 # What do you want to do?
 run_estimation     = false
-run_modal_forecast = false
-run_full_forecast  = false
-make_tables        = true
+run_forecast       = false
+make_tables        = false
 plot_irfs          = false
 plot_shockdecs     = false
 
@@ -23,7 +22,7 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "180705")
+m <= Setting(:data_vintage, "180914")
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
@@ -32,8 +31,8 @@ m <= Setting(:reoptimize, true)
 m <= Setting(:calculate_hessian, true)
 
 # Settings for forecast dates
-m <= Setting(:date_forecast_start,  quartertodate("2018-Q2"))
-m <= Setting(:date_conditional_end, quartertodate("2018-Q2"))
+m <= Setting(:date_forecast_start,  quartertodate("2018-Q3"))
+m <= Setting(:date_conditional_end, quartertodate("2018-Q3"))
 m <= Setting(:shockdec_startdate,   Nullable(date_mainsample_start(m)))
 
 # Parallelization
@@ -73,7 +72,7 @@ if run_estimation
 end
 
 # Forecast step: produces smoothed histories and shock decompositions
-if run_modal_forecast || run_full_forecast
+if run_forecast
 
     # set overrides
     overrides = forecast_input_file_overrides(m)
@@ -91,28 +90,24 @@ if run_modal_forecast || run_full_forecast
     forecast_string = ""
 
     # Modal forecast
-    if run_modal_forecast
-        # run modal forecasts and save all draws
-        forecast_one(m, :mode, cond_type, output_vars; verbose = :high)
+    # run modal forecasts and save all draws
+    forecast_one(m, :mode, cond_type, output_vars; verbose = :high)
 
-        # compute means and bands
-        compute_meansbands(m, :mode, cond_type, output_vars)
-    end
+    # compute means and bands
+    compute_meansbands(m, :mode, cond_type, output_vars)
 
     # Full-distribution forecast
-    if run_full_forecast
-        my_procs = addprocsfcn(nworkers)
-        @everywhere using DSGE
+    my_procs = addprocsfcn(nworkers)
+    @everywhere using DSGE
 
-        forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
-        rstar_bands = [0.68, 0.95] # Do not change these rstar_bands, since the makeRstarPlots.m file assumes
-                                   # the band ordering to be hard-coded
-        compute_meansbands(m, :full, cond_type, output_vars; verbose = :high, density_bands = rstar_bands,
-                           forecast_string = forecast_string)
-        rmprocs(my_procs)
+    forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
+    rstar_bands = [0.68, 0.95] # Do not change these rstar_bands, since the makeRstarPlots.m file assumes
+                               # the band ordering to be hard-coded
+    compute_meansbands(m, :full, cond_type, output_vars; verbose = :high, density_bands = rstar_bands,
+                       forecast_string = forecast_string)
+    rmprocs(my_procs)
 
-        meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string)
-    end
+    meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string)
 end
 
 if make_tables
