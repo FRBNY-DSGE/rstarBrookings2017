@@ -6,8 +6,9 @@ by Marco del Negro, Domenico Giannone, Marc Giannoni, and Andrea Tambalotti,
 *Brookings Papers on Economic Activity*, Spring 2017: 235-294.
 
 ## The update branch
-While the VAR and DSGE excel files hosted on the master branch containing update estimates
-will continue to be updated, the update branch will now be the main branch for continued work
+While the VAR and DSGE excel files containing updated rstar estimates and hosted on the
+master branch in the update directory will continue to be updated,
+the update branch will now be the main branch for continued work
 using this code base. That is, the .mat files corresponding
 to new TVAR estimates, and the various data files needed to produce updated figures will
 all be located in this branch.
