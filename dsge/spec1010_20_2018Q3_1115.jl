@@ -8,7 +8,7 @@ gr() # Or specify whichever plotting backend you prefer
 
 # What do you want to do?
 run_estimation     = false
-run_forecast       = true
+run_forecast       = false
 make_tables        = true
 plot_irfs          = false
 plot_shockdecs     = false
@@ -22,7 +22,7 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "181115")
+m <= Setting(:data_vintage, "181130")
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
