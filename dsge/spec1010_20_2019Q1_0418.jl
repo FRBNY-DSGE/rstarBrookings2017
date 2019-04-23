@@ -128,7 +128,7 @@ if make_tables
 
     for input_type in input_types
         # print history means and bands tables to csv
-        write_meansbands_tables_all(m, input_type, cond_type, [:histpseudo], forecast_string = forecast_string,
+        write_meansbands_tables_all(m, input_type, cond_type, [:histpseudo, :forecastpseudo], forecast_string = forecast_string,
                                     vars = vars)
 
         # print shockdec means and bands tables to csv
