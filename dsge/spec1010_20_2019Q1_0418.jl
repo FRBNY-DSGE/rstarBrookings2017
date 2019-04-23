@@ -1,6 +1,9 @@
 using DSGE, ClusterManagers, HDF5
+using DataFrames, JLD2
 using Plots
 gr() # Or specify whichever plotting backend you prefer
+
+@everywhere using OrderedCollections
 
 ##########################################################################################
 ## SETUP
@@ -22,7 +25,7 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "181130")
+m <= Setting(:data_vintage, "190418")
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
@@ -31,14 +34,13 @@ m <= Setting(:reoptimize, true)
 m <= Setting(:calculate_hessian, true)
 
 # Settings for forecast dates
-m <= Setting(:date_forecast_start,  quartertodate("2018-Q4"))
-m <= Setting(:date_conditional_end, quartertodate("2018-Q3"))
-m <= Setting(:shockdec_startdate,   Nullable(date_mainsample_start(m)))
+m <= Setting(:date_forecast_start,  quartertodate("2019-Q1"))
+m <= Setting(:date_conditional_end, quartertodate("2019-Q1"))
 
 # Parallelization
 m <= Setting(:forecast_block_size,  500)
-nworkers = 30
-addprocsfcn = addprocs_sge # choose to work with your scheduler; see ClusterManagers.jl
+# nworkers = 30
+# addprocsfcn = addprocs_sge # choose to work with your scheduler; see ClusterManagers.jl
 
 ##########################################################################################
 ## RUN
@@ -80,8 +82,8 @@ if run_forecast
     overrides[:full] = joinpath(saveroot, "output_data/m1010/ss20/estimate/raw/mhsave_vint=161223.h5")
 
     # what do we want to produce?
-    output_vars = [:histobs, :histpseudo, :forecastobs, :forecastpseudo, :shockdecobs, :shockdecpseudo,
-                   :irfobs, :irfpseudo]
+    output_vars = [:histobs, :histpseudo, :forecastobs, :forecastpseudo,
+                   :shockdecobs, :shockdecpseudo, :irfobs, :irfpseudo]
 
     # conditional type
     cond_type = :none
@@ -97,7 +99,7 @@ if run_forecast
     compute_meansbands(m, :mode, cond_type, output_vars)
 
     # Full-distribution forecast
-    my_procs = addprocsfcn(nworkers)
+   # my_procs = addprocsfcn(nworkers)
     @everywhere using DSGE
 
     forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
