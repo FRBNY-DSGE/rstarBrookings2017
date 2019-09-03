@@ -1,4 +1,4 @@
-using DSGE, ClusterManagers, HDF5, OrderedCollections, DataFrames
+using DSGE, ClusterManagers, HDF5, OrderedCollections, DataFrames, ModelConstructors
 using Plots, Nullables
 gr() # Or specify whichever plotting backend you prefer
 
@@ -8,10 +8,13 @@ gr() # Or specify whichever plotting backend you prefer
 
 # What do you want to do?
 run_estimation     = false
-run_forecast       = false
+run_forecast       = true
 make_tables        = true
 plot_irfs          = false
 plot_shockdecs     = false
+
+# Number of workers for parallel?
+n_workers = 20
 
 # Initialize model object
 # Note that the default for m1010 uses 6 anticipated shocks
@@ -22,7 +25,7 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "190712")
+m <= Setting(:data_vintage, "190829")
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
@@ -31,8 +34,8 @@ m <= Setting(:reoptimize, true)
 m <= Setting(:calculate_hessian, true)
 
 # Settings for forecast dates
-m <= Setting(:date_forecast_start,  quartertodate("2019-Q2"))
-m <= Setting(:date_conditional_end, quartertodate("2019-Q2"))
+m <= Setting(:date_forecast_start,  quartertodate("2019-Q3"))
+m <= Setting(:date_conditional_end, quartertodate("2019-Q3"))
 m <= Setting(:shockdec_startdate,   Nullable(date_mainsample_start(m)))
 
 # Parallelization
@@ -97,7 +100,7 @@ if run_forecast
     compute_meansbands(m, :mode, cond_type, output_vars)
 
     # Full-distribution forecast
-   # my_procs = addprocsfcn(nworkers)
+    my_procs = addprocs_frbny(n_workers)
     @everywhere using OrderedCollections
     @everywhere using DSGE
     @everywhere using DataFrames
@@ -107,7 +110,7 @@ if run_forecast
                                # the band ordering to be hard-coded
     compute_meansbands(m, :full, cond_type, output_vars; verbose = :high, density_bands = rstar_bands,
                        forecast_string = forecast_string)
-    #rmprocs(my_procs)
+    rmprocs(my_procs)
 
     meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string)
 end
