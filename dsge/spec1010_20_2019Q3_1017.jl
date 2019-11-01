@@ -25,7 +25,7 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "190829")
+m <= Setting(:data_vintage, "191017")
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
@@ -94,10 +94,10 @@ if run_forecast
 
     # Modal forecast
     # run modal forecasts and save all draws
-    forecast_one(m, :mode, cond_type, output_vars; verbose = :high)
+    # forecast_one(m, :mode, cond_type, output_vars; verbose = :high)
 
     # compute means and bands
-    compute_meansbands(m, :mode, cond_type, output_vars)
+    # compute_meansbands(m, :mode, cond_type, output_vars)
 
     # Full-distribution forecast
     my_procs = addprocs_frbny(n_workers)
