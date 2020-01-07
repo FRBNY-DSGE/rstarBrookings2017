@@ -25,7 +25,7 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "191118")
+m <= Setting(:data_vintage, "200107")
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
@@ -100,7 +100,7 @@ if run_forecast
     compute_meansbands(m, :mode, cond_type, output_vars)
 
     # Full-distribution forecast
-  #=  my_procs = addprocs_frbny(n_workers)
+    my_procs = addprocs_frbny(n_workers)
     @everywhere using OrderedCollections
     @everywhere using DSGE
     @everywhere using DataFrames
@@ -112,7 +112,7 @@ if run_forecast
                        forecast_string = forecast_string)
     rmprocs(my_procs)
 
-    meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string) =#
+    meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string)
 end
 
 if make_tables
