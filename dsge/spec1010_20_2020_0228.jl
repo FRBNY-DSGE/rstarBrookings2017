@@ -25,7 +25,7 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "200107")
+m <= Setting(:data_vintage, "200228")
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
@@ -34,8 +34,8 @@ m <= Setting(:reoptimize, true)
 m <= Setting(:calculate_hessian, true)
 
 # Settings for forecast dates
-m <= Setting(:date_forecast_start,  quartertodate("2019-Q4"))
-m <= Setting(:date_conditional_end, quartertodate("2019-Q4"))
+m <= Setting(:date_forecast_start,  quartertodate("2020-Q1"))
+m <= Setting(:date_conditional_end, quartertodate("2020-Q1"))
 m <= Setting(:shockdec_startdate,   Nullable(date_mainsample_start(m)))
 
 # Parallelization
@@ -104,6 +104,7 @@ if run_forecast
     @everywhere using OrderedCollections
     @everywhere using DSGE
     @everywhere using DataFrames
+    ENV["frbnyjuliamemory"] = "3G"
 
     forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string)
     rstar_bands = [0.68, 0.95] # Do not change these rstar_bands, since the makeRstarPlots.m file assumes
