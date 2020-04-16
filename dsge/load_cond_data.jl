@@ -1,0 +1,86 @@
+# This script loads in conditional daily data used for spreads in the Brookings DSGE model (Model 1010 ss20).
+
+using FredData, Dates, DataFrames, CSV, Statistics
+using DSGE: lastdayofquarter, missing2nan
+
+# Change these settings to update data file
+cond_id = 5
+vintage = "2020-04-16"                                  # YYYYMMDD format, should be the date w/latest available vintage
+quarter = "2020-04-01"                                  # start date of current quarter
+use_mean = true                                         # Use the mean, otherwise use the most recent observation
+quarter_over = Date(vintage) > Date(quarter) + Month(3) # Has the quarter ended?
+
+# Other settings, usually do not need to change
+fred_names = ["DBAA", "DAAA", "DGS10", "DGS20", "DGS30"]
+save_names = [:BAA,   :AAA,   :GS10,   :GS20,   :GS30]   # usually the name for the series at quarterly frequency
+units      = ["lin",  "lin",  "lin",   "lin",   "lin"]
+file_loc   = "input_data/cond"
+cond_idno = lpad(string(cond_id), 2, string(0)) # print as 2 digits
+filename   = "cond_cdid=" * cond_idno * "_cdvt=$(vintage[vcat(1:2, 6:7, 9:10)]).csv"
+
+# Fetch the data!
+f = Fred()
+data = DataFrame()
+for (name, unit) in zip(fred_names, units)
+    fred_series = get_data(f, name; vintage_dates = vintage, frequency = "q", units = unit)
+    if isempty(data)
+        global data[!, :date] = fred_series.data[!, :date]
+        global data[!, Symbol(name)] = fred_series.data[!, :value]
+    else
+        global data = join(data, fred_series.data[!, [:date, :value]], on = :date, kind = :outer)
+        colnames = names(data)
+        val_col  = findfirst(colnames .== :value)
+        colnames[val_col] = Symbol(name)
+        names!(data, colnames)
+    end
+end
+sort!(data, [:date])
+
+# When current quarter has not ended yet
+daily_data = DataFrame()
+if !quarter_over
+    for (name, unit) in zip(fred_names, units)
+        fred_series = get_data(f, name; observation_start = quarter,
+                               vintage_dates = vintage, frequency = "d", units = unit)
+        if isempty(daily_data)
+            global daily_data[!, :date] = fred_series.data[!, :date]
+            global daily_data[!, Symbol(name)] = fred_series.data[!, :value]
+        else
+            global daily_data = join(daily_data, fred_series.data[!, [:date, :value]], on = :date, kind = :outer)
+            colnames = names(daily_data)
+            val_col  = findfirst(colnames .== :value)
+            colnames[val_col] = Symbol(name)
+            names!(daily_data, colnames)
+        end
+    end
+
+    # Clean data
+    sort!(daily_data, [:date])
+    entry_row = findfirst(data[!, :date] .== Date(quarter))
+    for name in names(data)
+        if name != :date
+            nonan = .!(isnan.(daily_data[!, name]))
+            if use_mean
+                global data[entry_row, name] = Float64(mean(skipmissing(daily_data[nonan, name])))
+            else
+                global data[entry_row, name] = Float64(skipmissing(daily_data[nonan, name])[end])
+            end
+        end
+    end
+end
+
+# Fix the dates in data
+date_vec = map(x -> lastdayofquarter(x), data[!, :date])
+data[!, :date] = date_vec
+
+# Read in the conditional data and update it
+cond_data = CSV.read(joinpath(file_loc, filename))
+# for name in save_names         # only uncomment these lines if you want to check that this code is correct.
+#     cond_data[!, name] .= NaN  # Make sure you have another copy of the original CSV file to compare against.
+# end
+tmp = join(cond_data, data, on = :date, kind = :inner) # to get the right dates
+for (name, save_name) in zip(names(data)[.!(names(data) .== :date)], save_names)
+    miss_or_nan = isnan.(missing2nan(convert(Vector{Union{Missing, Float64}}, cond_data[!, save_name])))
+    cond_data[miss_or_nan, save_name] = tmp[miss_or_nan, name]
+end
+CSV.write(joinpath(file_loc, filename), cond_data)
