@@ -4,11 +4,10 @@ using FredData, Dates, DataFrames, CSV, Statistics
 using DSGE: lastdayofquarter, missing2nan
 
 # Change these settings to update data file
-cond_id = 5
-vintage = "2020-04-16"                                  # YYYYMMDD format, should be the date w/latest available vintage
-quarter = "2020-04-01"                                  # start date of current quarter
-use_mean = true                                         # Use the mean, otherwise use the most recent observation
-quarter_over = Date(vintage) > Date(quarter) + Month(3) # Has the quarter ended?
+cond_id  = 5
+vintage  = "2020-04-16"                      # YYYYMMDD format, should be the date w/latest available vintage
+quarter  = "2020-04-01"                      # start date of current quarter
+use_mean = true                              # Use the mean, otherwise use the most recent observation
 
 # Other settings, usually do not need to change
 fred_names = ["DBAA", "DAAA", "DGS10", "DGS20", "DGS30"]
@@ -17,6 +16,7 @@ units      = ["lin",  "lin",  "lin",   "lin",   "lin"]
 file_loc   = "input_data/cond"
 cond_idno = lpad(string(cond_id), 2, string(0)) # print as 2 digits
 filename   = "cond_cdid=" * cond_idno * "_cdvt=$(vintage[vcat(1:2, 6:7, 9:10)]).csv"
+quarter_over = Date(vintage) > Date(quarter) + Month(3) # Has the quarter ended?
 
 # Fetch the data!
 f = Fred()
