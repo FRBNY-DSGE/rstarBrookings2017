@@ -1,12 +1,13 @@
 # This script loads in conditional daily data used for spreads in the Brookings DSGE model (Model 1010 ss20).
+# This script assumes that an incomplete conditional data set already exists (see line 19).
 
 using FredData, Dates, DataFrames, CSV, Statistics
 using DSGE: lastdayofquarter, missing2nan
 
 # Change these settings to update data file
-cond_id  = 5
-vintage  = "2020-04-16"                      # YYYYMMDD format, should be the date w/latest available vintage
-quarter  = "2020-04-01"                      # start date of current quarter
+cond_id  = 17
+vintage  = "2020-05-28"                      # YYYYMMDD format, should be the date w/latest available vintage
+quarter  = "2020-04-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
 use_mean = true                              # Use the mean, otherwise use the most recent observation
 
 # Other settings, usually do not need to change
@@ -59,11 +60,12 @@ if !quarter_over
     entry_row = findfirst(data[!, :date] .== Date(quarter))
     for name in names(data)
         if name != :date
-            nonan = .!(isnan.(daily_data[!, name]))
+            skip_val = .!(isnan.(daily_data[!, name]))
+            skip_val = map(x -> ismissing(x) ? true : x, skip_val)
             if use_mean
-                global data[entry_row, name] = Float64(mean(skipmissing(daily_data[nonan, name])))
+                global data[entry_row, name] = Float64(mean(skipmissing(daily_data[skip_val, name])))
             else
-                global data[entry_row, name] = Float64(skipmissing(daily_data[nonan, name])[end])
+                global data[entry_row, name] = Float64(skipmissing(daily_data[skip_val, name])[end])
             end
         end
     end
@@ -80,7 +82,12 @@ cond_data = CSV.read(joinpath(file_loc, filename))
 # end
 tmp = join(cond_data, data, on = :date, kind = :inner) # to get the right dates
 for (name, save_name) in zip(names(data)[.!(names(data) .== :date)], save_names)
-    miss_or_nan = isnan.(missing2nan(convert(Vector{Union{Missing, Float64}}, cond_data[!, save_name])))
-    cond_data[miss_or_nan, save_name] = tmp[miss_or_nan, name]
+    if save_name in names(cond_data)
+        miss_or_nan = isnan.(missing2nan(convert(Vector{Union{Missing, Float64}}, cond_data[!, save_name])))
+        cond_data[miss_or_nan, save_name] = tmp[miss_or_nan, name]
+    else
+        cond_data[!, save_name] .= tmp[!, name]
+    end
+
 end
 CSV.write(joinpath(file_loc, filename), cond_data)
