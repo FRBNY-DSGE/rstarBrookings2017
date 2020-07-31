@@ -12,7 +12,8 @@ The [VAR Excel
 file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/TVAR_Comparison.xlsx)
 contains the original as well as updated estimates of the trends in the real
 return for safe and liquid assets, the convenience yield, and its safety and
-liquidity components computed using the VAR model. These are the estimates shown
+liquidity components computed using the VAR model. The [VAR vintages
+file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/vintages/TVAR_Rstar_Vintages.xlsx) contains quarterly vintages of the estimates. These are the estimates shown
 in Figures 1 (black lines), 4, and 5 of the paper.  The [DSGE Excel
 file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/DSGE_Rstar_Vintages.xls)
 contains original as well as updated estimates of the 30-year, 10-year, and
