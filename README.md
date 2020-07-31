@@ -9,7 +9,7 @@ by Marco del Negro, Domenico Giannone, Marc Giannoni, and Andrea Tambalotti,
 ## Updated r* estimates
 
 The [VAR Excel
-file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/TVAR_Rstar_Vintages.xlsx)
+file](https://github.com/FRBNY-DSGE/rstarBrookings2017/blob/master/update/archive/vintages/TVAR_Rstar_Vintages.xlsx)
 contains the original as well as updated estimates of the trends in the real
 return for safe and liquid assets, the convenience yield, and its safety and
 liquidity components computed using the VAR model. These are the estimates shown
