@@ -18,7 +18,7 @@ n_workers = 48
 
 # Initialize model object
 # Note that the default for m1010 uses 6 anticipated shocks
-m = Model1010("ss20", custom_settings = Dict{Symbol, Setting}(:n_mon_anticipated_shocks => Setting(:n_mon_anticipated_shocks, 13)))
+m = Model1010("ss20", custom_settings = Dict{Symbol, Setting}(:n_mon_anticipated_shocks => Setting(:n_mon_anticipated_shocks, 6)))
 
 # Settings for data, paths, etc.
 dataroot = joinpath(dirname(@__FILE__()), "input_data")
@@ -37,7 +37,7 @@ m <= Setting(:cond_semi_names, [:obs_AAAspread,:obs_BBBspread,
                                 :obs_nominalrate1, :obs_nominalrate2, :obs_nominalrate3,
                                 :obs_nominalrate4, :obs_nominalrate5, :obs_nominalrate6])
 
-forecast_string = ""
+forecast_string = "rstar_1021_semi"
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
@@ -100,7 +100,7 @@ if run_forecast
     # conditional type
     cond_type = :semi
 
-    df = load_data(m, cond_type = cond_type, check_empty_columns = false, try_disk = false)
+    df = load_data(m, cond_type = cond_type, check_empty_columns = false, try_disk = true)
 
     # Modal forecast
     # run modal forecasts and save all draws
@@ -124,6 +124,7 @@ if run_forecast
     rmprocs(my_procs)
 
     meansbands_to_matrix(m, :full, cond_type, output_vars; forecast_string = forecast_string)
+
 end
 
 if make_tables

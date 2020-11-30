@@ -28,7 +28,7 @@ m <= Setting(:saveroot, saveroot, "Output data directory path")
 m <= Setting(:data_vintage, "201021")
 m <= Setting(:cond_vintage, "201021")
 
-forecast_string = ""
+forecast_string = "rstar_1021_none"
 m <= Setting(:use_population_forecast, false)
 
 # Settings for estimation
