@@ -6,7 +6,7 @@ using DSGE: lastdayofquarter, missing2nan
 
 # Change these settings to update data file
 cond_id  = 17
-vintage  = "2020-11-30"                      # YYYYMMDD format, should be the date w/latest available vintage
+vintage  = "2021-01-13"                      # YYYYMMDD format, should be the date w/latest available vintage
 quarter  = "2020-10-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
 use_mean = true                              # Use the mean, otherwise use the most recent observation
 
@@ -16,7 +16,7 @@ save_names = [:BAA,   :AAA,   :GS10,   :GS20,   :GS30]   # usually the name for 
 units      = ["lin",  "lin",  "lin",   "lin",   "lin"]
 file_loc   = "input_data/cond"
 cond_idno = lpad(string(cond_id), 2, string(0)) # print as 2 digits
-filename   = "cond_cdid=" * cond_idno * "_cdvt=$(vintage[vcat(1:2, 6:7, 9:10)]).csv"
+filename   = "cond_cdid=" * cond_idno * "_cdvt=$(vintage[vcat(3:4, 6:7, 9:10)]).csv"
 quarter_over = Date(vintage) > Date(quarter) + Month(3) # Has the quarter ended?
 
 # Fetch the data!
@@ -29,7 +29,7 @@ for (name, unit) in zip(fred_names, units)
         global data[!, Symbol(name)] = fred_series.data[!, :value]
     else
         global data = join(data, fred_series.data[!, [:date, :value]], on = :date, kind = :outer)
-        colnames = names(data)
+        colnames = propertynames(data)
         val_col  = findfirst(colnames .== :value)
         colnames[val_col] = Symbol(name)
         names!(data, colnames)
@@ -48,7 +48,7 @@ if !quarter_over
             global daily_data[!, Symbol(name)] = fred_series.data[!, :value]
         else
             global daily_data = join(daily_data, fred_series.data[!, [:date, :value]], on = :date, kind = :outer)
-            colnames = names(daily_data)
+            colnames = propertynames(daily_data)
             val_col  = findfirst(colnames .== :value)
             colnames[val_col] = Symbol(name)
             names!(daily_data, colnames)
@@ -58,7 +58,7 @@ if !quarter_over
     # Clean data
     sort!(daily_data, [:date])
     entry_row = findfirst(data[!, :date] .== Date(quarter))
-    for name in names(data)
+    for name in propertynames(data)
         if name != :date
             skip_val = .!(isnan.(daily_data[!, name]))
             skip_val = map(x -> ismissing(x) ? true : x, skip_val)
@@ -76,13 +76,13 @@ date_vec = map(x -> lastdayofquarter(x), data[!, :date])
 data[!, :date] = date_vec
 
 # Read in the conditional data and update it
-cond_data = CSV.read(joinpath(file_loc, filename))
+cond_data = CSV.read(joinpath(file_loc, filename), DataFrame)
 # for name in save_names         # only uncomment these lines if you want to check that this code is correct.
 #     cond_data[!, name] .= NaN  # Make sure you have another copy of the original CSV file to compare against.
 # end
 tmp = join(cond_data, data, on = :date, kind = :inner) # to get the right dates
-for (name, save_name) in zip(names(data)[.!(names(data) .== :date)], save_names)
-    if save_name in names(cond_data)
+for (name, save_name) in zip(propertynames(data)[.!(propertynames(data) .== :date)], save_names)
+    if save_name in propertynames(cond_data)
         miss_or_nan = isnan.(missing2nan(convert(Vector{Union{Missing, Float64}}, cond_data[!, save_name])))
         cond_data[miss_or_nan, save_name] = tmp[miss_or_nan, name]
     else
