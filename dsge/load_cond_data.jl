@@ -5,8 +5,8 @@ using FredData, Dates, DataFrames, CSV, Statistics
 using DSGE: lastdayofquarter, missing2nan
 
 # Change these settings to update data file
-cond_id  = 17
-vintage  = "2021-02-25"                      # YYYYMMDD format, should be the date w/latest available vintage
+cond_id  = 09
+vintage  = "2021-04-12"                      # YYYYMMDD format, should be the date w/latest available vintage
 quarter  = "2021-01-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
 use_mean = true                              # Use the mean, otherwise use the most recent observation
 
