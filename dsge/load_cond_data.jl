@@ -6,8 +6,9 @@ using DSGE: lastdayofquarter, missing2nan
 
 # Change these settings to update data file
 cond_id  = 02
-vintage  = "2022-01-10"                      # YYYYMMDD format, should be the date w/latest available vintage
-quarter  = "2022-01-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
+vintage      = "2022-05-27"
+cond_vintage = "2022-05-17"                  # YYYYMMDD format, should be the date w/latest available vintage
+quarter  = "2022-04-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
 use_mean = true                              # Use the mean, otherwise use the most recent observation
 
 # Other settings, usually do not need to change
@@ -28,11 +29,11 @@ for (name, unit) in zip(fred_names, units)
         global data[!, :date] = fred_series.data[!, :date]
         global data[!, Symbol(name)] = fred_series.data[!, :value]
     else
-        global data = join(data, fred_series.data[!, [:date, :value]], on = :date, kind = :outer)
+        global data = outerjoin(data, fred_series.data[!, [:date, :value]], on = :date)
         colnames = propertynames(data)
         val_col  = findfirst(colnames .== :value)
         colnames[val_col] = Symbol(name)
-        names!(data, colnames)
+        rename!(data, colnames)
     end
 end
 sort!(data, [:date])
@@ -47,11 +48,11 @@ if !quarter_over
             global daily_data[!, :date] = fred_series.data[!, :date]
             global daily_data[!, Symbol(name)] = fred_series.data[!, :value]
         else
-            global daily_data = join(daily_data, fred_series.data[!, [:date, :value]], on = :date, kind = :outer)
+            global daily_data = outerjoin(daily_data, fred_series.data[!, [:date, :value]], on = :date)
             colnames = propertynames(daily_data)
             val_col  = findfirst(colnames .== :value)
             colnames[val_col] = Symbol(name)
-            names!(daily_data, colnames)
+            rename!(daily_data, colnames)
         end
     end
 
@@ -80,7 +81,7 @@ cond_data = CSV.read(joinpath(file_loc, filename), DataFrame)
 # for name in save_names         # only uncomment these lines if you want to check that this code is correct.
 #     cond_data[!, name] .= NaN  # Make sure you have another copy of the original CSV file to compare against.
 # end
-tmp = join(cond_data, data, on = :date, kind = :inner) # to get the right dates
+tmp = innerjoin(cond_data, data, on = :date) # to get the right dates
 for (name, save_name) in zip(propertynames(data)[.!(propertynames(data) .== :date)], save_names)
     if save_name in propertynames(cond_data)
         miss_or_nan = isnan.(missing2nan(convert(Vector{Union{Missing, Float64}}, cond_data[!, save_name])))
