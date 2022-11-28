@@ -6,9 +6,12 @@ using DSGE: lastdayofquarter, missing2nan
 
 # Change these settings to update data file
 cond_id  = 02
-vintage      = "2022-08-26"
-cond_vintage = "2022-08-26"                  # YYYYMMDD format, should be the date w/latest available vintage
-quarter  = "2022-07-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
+
+
+vintage      = "2022-10-14"
+cond_vintage = "2022-10-14"                  # YYYYMMDD format, should be the date w/latest available vintage
+quarter  = "2022-10-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
+
 use_mean = true                              # Use the mean, otherwise use the most recent observation
 
 # Other settings, usually do not need to change
