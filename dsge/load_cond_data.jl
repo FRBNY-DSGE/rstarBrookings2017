@@ -8,9 +8,9 @@ using DSGE: lastdayofquarter, missing2nan
 cond_id  = 02
 
 
-vintage      = "2022-10-14"
-cond_vintage = "2022-10-14"                  # YYYYMMDD format, should be the date w/latest available vintage
-quarter  = "2022-10-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
+vintage      = "2022-11-16"
+cond_vintage = "2022-11-16"                  # YYYYMMDD format, should be the date w/latest available vintage
+quarter  = "2023-01-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
 
 use_mean = true                              # Use the mean, otherwise use the most recent observation
 
