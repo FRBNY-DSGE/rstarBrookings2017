@@ -8,8 +8,8 @@ using DSGE: lastdayofquarter, missing2nan
 cond_id  = 02
 
 
-vintage      = "2023-05-26"
-cond_vintage = "2023-05-26"                  # YYYYMMDD format, should be the date w/latest available vintage
+vintage      = "2023-07-13"
+#cond_vintage = "2023-07-13"                  # YYYYMMDD format, should be the date w/latest available vintage
 quarter  = "2023-04-01"                      # start date of current quarter, so 2020-04-01 == 2020-Q2
 
 use_mean = true                              # Use the mean, otherwise use the most recent observation
