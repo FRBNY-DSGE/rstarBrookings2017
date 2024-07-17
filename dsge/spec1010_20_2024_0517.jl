@@ -18,16 +18,16 @@ n_workers = 48
 
 # Initialize model object
 # Note that the default for m1010 uses 6 anticipated shocks
-m = Model1010("ss20", custom_settings = Dict{Symbol, Setting}(:n_mon_anticipated_shocks => Setting(:n_mon_anticipated_shocks, 6)))
+m = Model1010("ss20", custom_settings = [Setting(:n_mon_anticipated_shocks, 6)])
 
 # Settings for data, paths, etc.
 dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "210412")
-m <= Setting(:cond_vintage, "210412") # conditional data was pulled 2 days later
-m <= Setting(:cond_id, 17)
+m <= Setting(:data_vintage, "240517")
+m <= Setting(:cond_vintage, "240517") # conditional data was pulled on 210516 for macro data, financial data on 210601
+m <= Setting(:cond_id, 02)
 m <= Setting(:cond_full_names, [:obs_gdp, :obs_corepce, :obs_AAAspread, :obs_BBBspread,
                                 :obs_nominalrate, :obs_longrate,
                                 :obs_nominalrate1, :obs_nominalrate2, :obs_nominalrate3,
@@ -36,6 +36,7 @@ m <= Setting(:cond_semi_names, [:obs_AAAspread,:obs_BBBspread,
                                 :obs_nominalrate, :obs_longrate,
                                 :obs_nominalrate1, :obs_nominalrate2, :obs_nominalrate3,
                                 :obs_nominalrate4, :obs_nominalrate5, :obs_nominalrate6])
+#m <= Setting(:cond_semi_names, [:obs_AAAspread,:obs_BBBspread])
 
 m <= Setting(:use_population_forecast, false)
 
@@ -47,8 +48,8 @@ m <= Setting(:reoptimize, true)
 m <= Setting(:calculate_hessian, true)
 
 # Settings for forecast dates
-m <= Setting(:date_forecast_start,  quartertodate("2021-Q1"))
-m <= Setting(:date_conditional_end, quartertodate("2021-Q1"))
+m <= Setting(:date_forecast_start,  quartertodate("2024-Q2"))
+m <= Setting(:date_conditional_end, quartertodate("2024-Q2"))
 m <= Setting(:shockdec_startdate,   Nullable(date_mainsample_start(m)))
 
 # Parallelization
@@ -93,11 +94,12 @@ if run_forecast
     overrides[:full] = joinpath(saveroot, "output_data/m1010/ss20/estimate/raw/mhsave_vint=161223.h5")
 
     # what do we want to produce?
-    output_vars = [:histobs, :histpseudo, :forecastobs, :forecastpseudo] #=, :shockdecobs, :shockdecpseudo,
-                   :irfobs, :irfpseudo] =#
+    output_vars = [:histobs, :histpseudo, :forecastobs, :forecastpseudo]#=, :shockdecobs, :shockdecpseudo,
+                  # :irfobs, :irfpseudo] =#
+                  #=[:shockdecobs, :shockdecpseudo, :trendobs, :trendpseudo, :dettrendobs, :dettrendpseudo]=#
 
     # conditional type
-    cond_type = :none
+    cond_type = :full
 
     df = load_data(m, cond_type = cond_type, check_empty_columns = false, try_disk = false)
 
@@ -113,7 +115,9 @@ if run_forecast
     @everywhere using OrderedCollections
     @everywhere using DSGE
     @everywhere using DataFrames
-    ENV["frbnyjuliamemory"] = "2G"
+
+    #ENV["frbnyjuliamemory"] = "6G" - commenting out for shockdecs 2/22/23
+    ENV["frbnyjuliamemory"] = "20G"
 
     forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string, df = df)
     rstar_bands = [0.68, 0.95] # Do not change these rstar_bands, since the makeRstarPlots.m file assumes
@@ -130,7 +134,7 @@ if make_tables
     # input and conditional types
     input_types = [:mode, :full]
     if !isdefined(Main, :cond_type)
-        cond_type = :none
+        cond_type = :full
     end
 
     vars = [:ExAnteRealRate, :Forward5YearRealRate, :Forward10YearRealRate,
@@ -144,8 +148,8 @@ if make_tables
                                     vars = vars)
 
         # print shockdec means and bands tables to csv
-       #= write_meansbands_tables_all(m, input_type, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
-                                    vars = vars, forecast_string = forecast_string)=#
+        #write_meansbands_tables_all(m, input_type, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
+                                    #vars = vars, forecast_string = forecast_string)
     end
 
 end

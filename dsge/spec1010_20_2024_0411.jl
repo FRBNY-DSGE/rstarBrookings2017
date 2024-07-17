@@ -1,4 +1,4 @@
-using DSGE, ClusterManagers, HDF5, JLD2, JLD, OrderedCollections, DataFrames, ModelConstructors
+using DSGE, ClusterManagers, HDF5, OrderedCollections, DataFrames, ModelConstructors
 using Plots, Nullables
 gr() # Or specify whichever plotting backend you prefer
 
@@ -15,6 +15,7 @@ plot_shockdecs     = false
 
 # Number of workers for parallel?
 n_workers = 48
+
 # Initialize model object
 # Note that the default for m1010 uses 6 anticipated shocks
 m = Model1010("ss20", custom_settings = [Setting(:n_mon_anticipated_shocks, 6)])
@@ -24,8 +25,8 @@ dataroot = joinpath(dirname(@__FILE__()), "input_data")
 saveroot = dirname(@__FILE__())
 m <= Setting(:dataroot, dataroot, "Input data directory path")
 m <= Setting(:saveroot, saveroot, "Output data directory path")
-m <= Setting(:data_vintage, "231019")
-m <= Setting(:cond_vintage, "231019")
+m <= Setting(:data_vintage, "240411")
+m <= Setting(:cond_vintage, "240411") # conditional data was pulled on 210516 for macro data, financial data on 210601
 m <= Setting(:cond_id, 02)
 m <= Setting(:cond_full_names, [:obs_gdp, :obs_corepce, :obs_AAAspread, :obs_BBBspread,
                                 :obs_nominalrate, :obs_longrate,
@@ -47,13 +48,12 @@ m <= Setting(:reoptimize, true)
 m <= Setting(:calculate_hessian, true)
 
 # Settings for forecast dates
-m <= Setting(:date_forecast_start,  quartertodate("2023-Q3"))
-m <= Setting(:date_conditional_end, quartertodate("2023-Q3"))
+m <= Setting(:date_forecast_start,  quartertodate("2024-Q1"))
+m <= Setting(:date_conditional_end, quartertodate("2024-Q1"))
 m <= Setting(:shockdec_startdate,   Nullable(date_mainsample_start(m)))
 
 # Parallelization
 m <= Setting(:forecast_block_size,  500)
-
 
 ##########################################################################################
 ## RUN
@@ -94,16 +94,14 @@ if run_forecast
     overrides[:full] = joinpath(saveroot, "output_data/m1010/ss20/estimate/raw/mhsave_vint=161223.h5")
 
     # what do we want to produce?
-    output_vars = [:histobs, :histpseudo, :forecastobs, :forecastpseudo]#=, :shockdecobs, :shockdecpseudo,
+    output_vars = #[:histobs, :histpseudo, :forecastobs, :forecastpseudo]#=, :shockdecobs, :shockdecpseudo,
                   # :irfobs, :irfpseudo] =#
-                  #[:shockdecobs, :shockdecpseudo] #:trendobs, :trendpseudo, :dettrendobs, :dettrendpseudo]
+                  [:shockdecobs, :shockdecpseudo, :trendobs, :trendpseudo, :dettrendobs, :dettrendpseudo]
 
     # conditional type
     cond_type = :full
 
     df = load_data(m, cond_type = cond_type, check_empty_columns = false, try_disk = false)
-   # @assert false
-
 
     # Modal forecast
     # run modal forecasts and save all draws
@@ -113,13 +111,14 @@ if run_forecast
     compute_meansbands(m, :mode, cond_type, output_vars, forecast_string = forecast_string, df = df)
 
     # Full-distribution forecast
-    #ENV["frbnyjuliamemory"] = "2G"
     my_procs = addprocs_frbny(n_workers)
     @everywhere using OrderedCollections
     @everywhere using DSGE
     @everywhere using DataFrames
 
-    ENV["frbnyjuliamemory"] = "2G"
+    #ENV["frbnyjuliamemory"] = "6G" - commenting out for shockdecs 2/22/23
+    ENV["frbnyjuliamemory"] = "20G"
+
     forecast_one(m, :full, cond_type, output_vars; verbose = :high, forecast_string = forecast_string, df = df)
     rstar_bands = [0.68, 0.95] # Do not change these rstar_bands, since the makeRstarPlots.m file assumes
                                # the band ordering to be hard-coded
@@ -131,7 +130,6 @@ if run_forecast
 end
 
 if make_tables
-    cond_type = :full
 
     # input and conditional types
     input_types = [:mode, :full]
@@ -144,16 +142,14 @@ if make_tables
             :Forward10YearRealNaturalRate, :Forward20YearRealNaturalRate,
             :Forward30YearRealNaturalRate, :ExpectedAvg20YearRealNaturalRate]
 
-    #vars = [:obs_AAAspread, :obs_BBBspread]
-
     for input_type in input_types
         # print history means and bands tables to csv
-        write_meansbands_tables_all(m, input_type, cond_type, [:histpseudo, :forecastpseudo], forecast_string = forecast_string,
-                                    vars = vars)
+        #write_meansbands_tables_all(m, input_type, cond_type, [:histpseudo, :forecastpseudo], forecast_string = forecast_string,
+                              #      vars = vars) - commenting out for shockdecs plot update 2/22/23
 
         # print shockdec means and bands tables to csv
-       # write_meansbands_tables_all(m, input_type, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo], #typically pseudo
-                         #          vars = vars, forecast_string = forecast_string)
+        write_meansbands_tables_all(m, input_type, cond_type, [:shockdecpseudo, :trendpseudo, :dettrendpseudo],
+                                    vars = vars, forecast_string = forecast_string)
     end
 
 end
@@ -218,7 +214,7 @@ if plot_shockdecs
     # Change these settings as you see fit
     #############################################
     start_date = DSGE.quarter_number_to_date(1994)
-    end_date = DSGE.quarter_number_to_date(2023.25)
+    end_date = DSGE.quarter_number_to_date(2017.5)
 
     input_type = :mode
 
@@ -242,8 +238,7 @@ if plot_shockdecs
     end
 
     # By default set to empty string if save_plots is false
-    plotroot = save_plots ? "test_figures/" : ""
-        #figurespath(m, "forecast") : ""
+    plotroot = save_plots ? figurespath(m, "forecast") : ""
 
     plots = []
     for var in vars

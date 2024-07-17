@@ -1,0 +1,30 @@
+┌ Warning: Pkg.installed() is deprecated
+└ @ Pkg /buildworker/worker/package_linux64/build/usr/share/julia/stdlib/v1.5/Pkg/src/Pkg.jl:554
+┌ Warning: /data/dsge_data_dir/dsgejl/pranay/rstarBrookings2017/dsge/input_data/raw/dlx_240517.csv does not contain the entire date range specified; missings used.
+└ @ DSGE ~/.julia/dev/DSGE/src/data/load_data.jl:244
+ERROR: LoadError: ArgumentError: Unable to parse date time. Expected directive Delim(-) at char 3
+Stacktrace:
+ [1] macro expansion at /buildworker/worker/package_linux64/build/usr/share/julia/stdlib/v1.5/Dates/src/parse.jl:104 [inlined]
+ [2] tryparsenext_core(::String, ::Int64, ::Int64, ::Dates.DateFormat{Symbol("yyyy-mm-dd"),Tuple{Dates.DatePart{'y'},Dates.Delim{Char,1},Dates.DatePart{'m'},Dates.Delim{Char,1},Dates.DatePart{'d'}}}, ::Bool) at /buildworker/worker/package_linux64/build/usr/share/julia/stdlib/v1.5/Dates/src/parse.jl:38
+ [3] macro expansion at /buildworker/worker/package_linux64/build/usr/share/julia/stdlib/v1.5/Dates/src/parse.jl:150 [inlined]
+ [4] tryparsenext_internal at /buildworker/worker/package_linux64/build/usr/share/julia/stdlib/v1.5/Dates/src/parse.jl:125 [inlined]
+ [5] parse at /buildworker/worker/package_linux64/build/usr/share/julia/stdlib/v1.5/Dates/src/parse.jl:282 [inlined]
+ [6] Date at /buildworker/worker/package_linux64/build/usr/share/julia/stdlib/v1.5/Dates/src/io.jl:503 [inlined] (repeats 2 times)
+ [7] _broadcast_getindex_evalf at ./broadcast.jl:648 [inlined]
+ [8] _broadcast_getindex at ./broadcast.jl:621 [inlined]
+ [9] getindex at ./broadcast.jl:575 [inlined]
+ [10] macro expansion at ./broadcast.jl:932 [inlined]
+ [11] macro expansion at ./simdloop.jl:77 [inlined]
+ [12] copyto! at ./broadcast.jl:931 [inlined]
+ [13] copyto! at ./broadcast.jl:886 [inlined]
+ [14] copy at ./broadcast.jl:862 [inlined]
+ [15] materialize(::Base.Broadcast.Broadcasted{Base.Broadcast.DefaultArrayStyle{1},Nothing,Type{Dates.Date},Tuple{Array{String,1}}}) at ./broadcast.jl:837
+ [16] format_dates!(::Symbol, ::DataFrame) at /home/rcepxg14/.julia/dev/DSGE/src/data/util.jl:112
+ [17] load_data_levels(::Model1010{Float64}; verbose::Symbol, add_vals::Tuple{Bool,Dates.Date}) at /home/rcepxg14/.julia/dev/DSGE/src/data/load_data.jl:237
+ [18] load_data(::Model1010{Float64}; cond_type::Symbol, try_disk::Bool, verbose::Symbol, check_empty_columns::Bool, summary_statistics::Symbol, add_vals::Tuple{Bool,Dates.Date}, fomc_dates::Array{Int64,1}) at /home/rcepxg14/.julia/dev/DSGE/src/data/load_data.jl:59
+ [19] top-level scope at /data/dsge_data_dir/dsgejl/pranay/rstarBrookings2017/dsge/spec1010_20_2024_0517.jl:104
+ [20] include(::Function, ::Module, ::String) at ./Base.jl:380
+ [21] include(::Module, ::String) at ./Base.jl:368
+ [22] exec_options(::Base.JLOptions) at ./client.jl:296
+ [23] _start() at ./client.jl:506
+in expression starting at /data/dsge_data_dir/dsgejl/pranay/rstarBrookings2017/dsge/spec1010_20_2024_0517.jl:89
