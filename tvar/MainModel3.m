@@ -25,12 +25,12 @@ if RunEstimation
     p = 4; %Number of lags in the VAR for the cycle;
     
     if ispc
-        [DATA,TEXT] = xlsread('DataCompleteLatest.xls');
+        [DATA,TEXT] = xlsread('DataCompleteLatest.xlsx');
         Mnem = TEXT(1,2:end);
         Time = datenum(TEXT(2:end,1),'mm/dd/yyyy');
         Y = DATA;
     else
-        [DATA,TEXT] = xlsread('DataCompleteLatest.xls');
+        [DATA,TEXT] = xlsread('DataCompleteLatest.xlsx');
         Mnem = TEXT(2:end);
         Time = DATA(:,1) + datenum('12-31-1899');
         Y = DATA(:,2:end);
@@ -45,7 +45,7 @@ if RunEstimation
     
     
     FirstY = 1960;
-    LastY  = 2018;
+    LastY  = 2026;
     
     T0 = min(find(year(Time)==FirstY));
     T1 = max(find(year(Time)==LastY));
